@@ -3,10 +3,10 @@
 namespace App\Spiders;
 
 use GuzzleHttp\Client;
+use Prophecy\Exception\Doubler\ClassNotFoundException;
 use \QL\QueryList;
 use \Illuminate\Support\Facades\Log;
 use \Illuminate\Support\Facades\Redis;
-use \Symfony\Component\Debug\Exception\ClassNotFoundException;
 
 class Spider
 {
@@ -81,35 +81,35 @@ class Spider
     protected function process($urls, $table_selector, $map_func)
     {
         foreach ($urls as $url) {
-            $host = parse_url($url, PHP_URL_HOST);
-            $options = [
-                'headers' => [
-                    'Referer' => "http://$host/",
-                    'User-Agent' => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.3 Safari/537.36",
-                    'Accept' => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                    'Upgrade-Insecure-Requests' => "1",
-                    'Host' => $host,
-                    'DNT' => "1",
-                ],
-                'timeout' => $this->time_out
-            ];
-            //抓取网页内容
-            $content = $this->ql->get($url, [], $options);
-            //获取数据列表
-            $table = $content->find($table_selector);
-            //遍历数据列
-            $table->map(function ($tr) use ($map_func) {
-                try {
+            try {
+                $host = parse_url($url, PHP_URL_HOST);
+                $options = [
+                    'headers' => [
+                        'Referer' => "http://$host/",
+                        'User-Agent' => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.3 Safari/537.36",
+                        'Accept' => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                        'Upgrade-Insecure-Requests' => "1",
+                        'Host' => $host,
+                        'DNT' => "1",
+                    ],
+                    'timeout' => $this->time_out
+                ];
+                //抓取网页内容
+                $content = $this->ql->get($url, [], $options);
+                //获取数据列表
+                $table = $content->find($table_selector);
+                //遍历数据列
+                $table->map(function ($tr) use ($map_func) {
                     //代理入库
                     if ($proxy = call_user_func_array($map_func, [$tr])) {
                         $this->addProxy($proxy);
                     }
-                } catch (\Exception $e) {
-                    Log::error("代理爬取失败[{$this->driver}]：" . $e->getMessage());
+                });
+                if ($this->sleep) {
+                    sleep($this->sleep);
                 }
-            });
-            if ($this->sleep) {
-                sleep($this->sleep);
+            } catch (\Exception $e) {
+                Log::error("代理爬取失败[driver:{$this->driver}][url:{$url}]：" . $e->getMessage());
             }
         }
     }

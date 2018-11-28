@@ -19,7 +19,7 @@ class Data5u extends Spider
         $this->process($urls, "ul.l2", function ($tr) {
             $ip = $tr->find('li:eq(0)')->text();
             $port = $tr->find('li:eq(1)')->text();
-            return $ip . ':' . $port;
+            return $ip && $port ? $ip . ':' . $port : null;
         });
     }
 }

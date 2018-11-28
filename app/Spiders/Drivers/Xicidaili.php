@@ -26,7 +26,7 @@ class Xicidaili extends Spider
         $this->process($urls, "table#ip_list tr", function ($tr) {
             $ip = $tr->find('td:eq(1)')->text();
             $port = $tr->find('td:eq(2)')->text();
-            return $ip . ':' . $port;
+            return $ip && $port ? $ip . ':' . $port : null;
         });
     }
 }

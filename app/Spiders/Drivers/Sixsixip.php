@@ -20,7 +20,7 @@ class Sixsixip extends Spider
         $this->process($urls, "#main table tr", function ($tr) {
             $ip = $tr->find('td:eq(0)')->text();
             $port = $tr->find('td:eq(1)')->text();
-            return $ip . ':' . $port;
+            return $ip && $port ? $ip . ':' . $port : null;
         });
     }
 }
