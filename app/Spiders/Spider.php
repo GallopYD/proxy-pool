@@ -28,7 +28,7 @@ class Spider
     }
 
     /**
-     * get instance
+     * Get Instance
      * @return Spider
      */
     static public function getInstance()
@@ -40,7 +40,7 @@ class Spider
     }
 
     /**
-     * set driver
+     * Set Driver
      * @param $driver
      * @throws ClassNotFoundException
      */
@@ -56,7 +56,7 @@ class Spider
     }
 
     /**
-     * get driver
+     * Get Driver
      * @return mixed
      */
     public function getDriver()
@@ -65,7 +65,7 @@ class Spider
     }
 
     /**
-     * handle
+     * Handle
      */
     public function handle()
     {
@@ -73,7 +73,7 @@ class Spider
     }
 
     /**
-     * 爬取过程
+     * Process
      * @param $urls
      * @param $table_selector
      * @param $map_func
@@ -115,7 +115,7 @@ class Spider
     }
 
     /**
-     * 代理入库
+     * Add Proxy
      * @param $proxy
      */
     protected function addProxy($proxy)
@@ -125,7 +125,7 @@ class Spider
     }
 
     /**
-     * 代理检测
+     * Check Proxy
      * @param $proxy
      * @return string
      */
