@@ -1,7 +1,10 @@
 <?php
 
+namespace App\Spiders;
+
 use \QL\QueryList;
 use \Illuminate\Support\Facades\Log;
+use \Illuminate\Support\Facades\Redis;
 use \Symfony\Component\Debug\Exception\ClassNotFoundException;
 
 class Spider
@@ -11,6 +14,7 @@ class Spider
     private $ql;
     private $driver;
     private $time_out = 3;
+    public $sleep;
 
     private function __construct()
     {
@@ -21,6 +25,10 @@ class Spider
     {
     }
 
+    /**
+     * get instance
+     * @return Spider
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self) {
@@ -29,9 +37,14 @@ class Spider
         return self::$instance;
     }
 
+    /**
+     * set driver
+     * @param $driver
+     * @throws ClassNotFoundException
+     */
     public function setDriver($driver)
     {
-        $this->driver = ucfirst(substr($driver, 0, strpos($driver, '.')));
+        $this->driver = $driver;
         $className = "\\App\\Spiders\\Drivers\\" . $this->driver;
         if (class_exists($className)) {
             $this->driver = new $className($this);
@@ -40,11 +53,18 @@ class Spider
         }
     }
 
+    /**
+     * get driver
+     * @return mixed
+     */
     public function getDriver()
     {
         return $this->driver;
     }
 
+    /**
+     * handle
+     */
     public function handle()
     {
         $this->driver->handle();
@@ -72,21 +92,33 @@ class Spider
                 'timeout' => $this->time_out
             ];
             //抓取网页内容
-            $ql = $this->ql->get($url, [], $options);
-            //选中数据列表Table
-            $table = $ql->find($table_selector);
+            $content = $this->ql->get($url, [], $options);
+            //获取数据列表
+            $table = $content->find($table_selector);
             //遍历数据列
             $table->map(function ($tr) use ($map_func) {
                 try {
-                    //获取IP、端口、透明度、协议
-                    list($ip, $port, $anonymity, $protocol) = call_user_func_array($map_func, [$tr]);
-                    //日志记录
-                    Log::info("抓取代理：{$ip}:{$port}");
-                    //代理IP入库 TODO
+                    //代理入库
+                    if($proxy = call_user_func_array($map_func, [$tr])){
+                        $this->addProxy($proxy);
+                    }
                 } catch (\Exception $e) {
-                    Log::error("代理抓取失败：" . $e->getMessage());
+                    Log::error("代理爬取失败[{$this->driver}]：" . $e->getMessage());
                 }
             });
+            if($this->sleep){
+                sleep($this->sleep);
+            }
         }
+    }
+
+    /**
+     * 代理入库
+     * @param $proxy
+     */
+    protected function addProxy($proxy)
+    {
+        Redis::rpush('proxies',$proxy);
+        Log::info("代理入库：$proxy");
     }
 }
