@@ -2,6 +2,7 @@
 
 namespace App\Spiders;
 
+use GuzzleHttp\Client;
 use \QL\QueryList;
 use \Illuminate\Support\Facades\Log;
 use \Illuminate\Support\Facades\Redis;
@@ -13,12 +14,13 @@ class Spider
 
     private $ql;
     private $driver;
-    private $time_out = 3;
+    private $time_out;
     public $sleep;
 
     private function __construct()
     {
         $this->ql = QueryList::getInstance();
+        $this->time_out = config('proxy.time_out');
     }
 
     private function __clone()
@@ -99,14 +101,14 @@ class Spider
             $table->map(function ($tr) use ($map_func) {
                 try {
                     //代理入库
-                    if($proxy = call_user_func_array($map_func, [$tr])){
+                    if ($proxy = call_user_func_array($map_func, [$tr])) {
                         $this->addProxy($proxy);
                     }
                 } catch (\Exception $e) {
                     Log::error("代理爬取失败[{$this->driver}]：" . $e->getMessage());
                 }
             });
-            if($this->sleep){
+            if ($this->sleep) {
                 sleep($this->sleep);
             }
         }
@@ -118,7 +120,25 @@ class Spider
      */
     protected function addProxy($proxy)
     {
-        Redis::rpush('proxies',$proxy);
+        Redis::rpush('proxies', $proxy);
         Log::info("代理入库：$proxy");
+    }
+
+    /**
+     * 代理检测
+     * @param $proxy
+     * @return string
+     */
+    public function checkProxy($proxy)
+    {
+        $client = new Client();
+        $check_url = config('proxy.check_url');
+        $response = $client->request('GET', $check_url, [
+            'proxy' => [
+                "http://$proxy"
+            ],
+            'timeout' => $this->time_out
+        ]);
+        return $response->getBody()->getContents();
     }
 }
