@@ -8,7 +8,7 @@ class Kuaidaili extends Spider
 {
     public function handle()
     {
-        $this->sleep = 3;
+        $this->sleep = rand(3,5);
         $urls = [
             "http://www.kuaidaili.com/free/inha/",
             "http://www.kuaidaili.com/free/inha/2/",
@@ -21,10 +21,12 @@ class Kuaidaili extends Spider
             "http://www.kuaidaili.com/free/intr/4/",
             "http://www.kuaidaili.com/free/intr/5/",
         ];
-        $this->process($urls, "#list table tr", function ($tr) {
+        $this->process($urls, "#list table tbody tr", function ($tr) {
             $ip = $tr->find('td:eq(0)')->text();
             $port = $tr->find('td:eq(1)')->text();
-            return $ip && $port ? $ip . ':' . $port : null;
+            $anonymity = str_contains($tr->find('td:eq(2)')->text(), ["高匿"]) ? 'anonymous' : 'transparent';
+            $protocol = strtolower($tr->find('td:eq(3)')->text());
+            return [$ip, $port, $anonymity, $protocol];
         });
     }
 }

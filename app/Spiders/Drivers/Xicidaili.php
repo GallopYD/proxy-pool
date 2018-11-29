@@ -8,6 +8,7 @@ class Xicidaili extends Spider
 {
     public function handle()
     {
+        $this->sleep = rand(3,5);
         $urls = [
             "http://www.xicidaili.com/nn/",
             "http://www.xicidaili.com/nn/2",
@@ -26,7 +27,9 @@ class Xicidaili extends Spider
         $this->process($urls, "table#ip_list tr", function ($tr) {
             $ip = $tr->find('td:eq(1)')->text();
             $port = $tr->find('td:eq(2)')->text();
-            return $ip && $port ? $ip . ':' . $port : null;
+            $anonymity = $tr->find('td:eq(4)')->text() == "高匿" ? 'anonymous' : 'transparent';
+            $protocol = strtolower($tr->find('td:eq(5)')->text());
+            return [$ip, $port, $anonymity, $protocol];
         });
     }
 }
