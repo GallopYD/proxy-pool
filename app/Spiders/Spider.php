@@ -149,28 +149,10 @@ class Spider
     }
 
     /**
-     * Check Proxy
-     * @param $proxy
-     * @return string
-     */
-    public function checkProxy($ip, $port, $protocol)
-    {
-        $client = new Client();
-        $check_url = config('proxy.check_url');
-        $response = $client->request('GET', $check_url, [
-            'proxy' => [
-                "$protocol://$ip:$port"
-            ],
-            'timeout' => $this->time_out
-        ]);
-        return $response->getBody()->getContents();
-    }
-
-    /**
      * Check Limit
      * @return bool
      */
-    public function checkLimit()
+    private function checkLimit()
     {
         if (!static::$current_count) {
             static::$current_count = Proxy::count();

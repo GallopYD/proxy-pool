@@ -2,24 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\Spiders\Spider;
+use App\Models\Proxy;
+use App\Spiders\Tester;
 use Illuminate\Console\Command;
 
-class CrawlProxy extends Command
+class TestProxy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'proxy:crawl {drivers?}';
+    protected $signature = 'proxy:test';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Crawl Proxy';
+    protected $description = 'Testing Proxy';
 
     /**
      * Create a new command instance.
@@ -38,14 +39,15 @@ class CrawlProxy extends Command
      */
     public function handle()
     {
-        if (!$drivers = $this->argument('drivers')) {
-            $drivers = config('proxy.drivers');
-        }
-        $drivers = explode('|', $drivers);
-        $spider = Spider::getInstance();
-        foreach ($drivers as $driver) {
-            $spider->setDriver($driver);
-            $spider->handle();
-        }
+        //每次检测数量
+        $count = config('proxy.test_count');
+
+        $tester = Tester::getInstance();
+        $proxies = Proxy::query()->orderBy('updated_at')
+            ->limit($count)
+            ->get();
+        $proxies->each(function ($proxy) use ($tester) {
+            $tester->handle($proxy);
+        });
     }
 }
