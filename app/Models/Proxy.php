@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 /**
  * App\Models\Proxy
@@ -47,5 +48,18 @@ class Proxy extends Model
         $data = $proxy->ip . ':' . $proxy->port;
         $proxy->delete();
         return $data;
+    }
+
+    /**
+     * 获取代理列表
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function getList()
+    {
+        $proxies = self::query()
+            ->orderByDesc('checked_at')
+            ->orderBy('speed')
+            ->paginate(30);
+        return $proxies;
     }
 }

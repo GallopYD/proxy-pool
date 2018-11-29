@@ -19,4 +19,5 @@ Route::group([
     'limit' => 100,
 ], function () {
     Route::get('proxies/one', 'ProxyController@one');
+    Route::get('proxies/check', 'ProxyController@check');
 });
