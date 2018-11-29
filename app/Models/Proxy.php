@@ -33,4 +33,19 @@ use Illuminate\Database\Eloquent\Model;
 class Proxy extends Model
 {
 
+    protected $guarded = [];
+
+    /**
+     * 获取最新验证代理
+     */
+    public static function getNewest()
+    {
+        $proxy = self::query()
+            ->orderByDesc('checked_at')
+            ->orderBy('speed')
+            ->first();
+        $data = $proxy->ip . ':' . $proxy->port;
+        $proxy->delete();
+        return $data;
+    }
 }
