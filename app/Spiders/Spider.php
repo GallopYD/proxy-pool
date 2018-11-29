@@ -2,20 +2,24 @@
 
 namespace App\Spiders;
 
+use App\Models\Proxy;
 use GuzzleHttp\Client;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use \QL\QueryList;
 use \Illuminate\Support\Facades\Log;
-use \Illuminate\Support\Facades\Redis;
 
 class Spider
 {
     static private $instance;
+    static public $current_count;
 
     private $ql;
     private $driver;
     private $time_out;
+
     public $sleep;
+    public $inputEncoding;
+    public $outputEncoding;
 
     private function __construct()
     {
@@ -81,6 +85,10 @@ class Spider
     protected function process($urls, $table_selector, $map_func)
     {
         foreach ($urls as $url) {
+            //代理池上限判断
+            if (!$this->checkLimit()) {
+                break;
+            }
             try {
                 $host = parse_url($url, PHP_URL_HOST);
                 $options = [
@@ -96,20 +104,24 @@ class Spider
                 ];
                 //抓取网页内容
                 $content = $this->ql->get($url, [], $options);
+                //编码设置
+                if ($this->inputEncoding && $this->outputEncoding) {
+                    $content->encoding($this->outputEncoding, $this->inputEncoding);
+                }
                 //获取数据列表
                 $table = $content->find($table_selector);
                 //遍历数据列
                 $table->map(function ($tr) use ($map_func) {
+                    //获取IP、端口、透明度、协议
+                    list($ip, $port, $anonymity, $protocol) = call_user_func_array($map_func, [$tr]);
                     //代理入库
-                    if ($proxy = call_user_func_array($map_func, [$tr])) {
-                        $this->addProxy($proxy);
-                    }
+                    $this->addProxy($ip, $port, $anonymity, $protocol);
                 });
-                if ($this->sleep) {
-                    sleep($this->sleep);
-                }
             } catch (\Exception $e) {
                 Log::error("代理爬取失败[driver:{$this->driver}][url:{$url}]：" . $e->getMessage());
+            }
+            if ($this->sleep) {
+                sleep($this->sleep);
             }
         }
     }
@@ -118,10 +130,22 @@ class Spider
      * Add Proxy
      * @param $proxy
      */
-    protected function addProxy($proxy)
+    protected function addProxy($ip, $port, $anonymity, $protocol)
     {
-        Redis::rpush('proxies', $proxy);
-        Log::info("代理入库：$proxy");
+        $exists = Proxy::whereIp($ip)
+            ->wherePort($port)
+            ->whereProtocol($protocol)
+            ->exists();
+        if ($ip & $port & $anonymity & $protocol && !$exists && $this->checkLimit()) {
+            $proxy = new Proxy();
+            $proxy->ip = $ip;
+            $proxy->port = $port;
+            $proxy->anonymity = $anonymity;
+            $proxy->protocol = $protocol;
+            $proxy->save();
+            static::$current_count++;
+            Log::info("代理入库：$proxy");
+        }
     }
 
     /**
@@ -129,16 +153,32 @@ class Spider
      * @param $proxy
      * @return string
      */
-    public function checkProxy($proxy)
+    public function checkProxy($ip, $port, $protocol)
     {
         $client = new Client();
         $check_url = config('proxy.check_url');
         $response = $client->request('GET', $check_url, [
             'proxy' => [
-                "http://$proxy"
+                "$protocol://$ip:$port"
             ],
             'timeout' => $this->time_out
         ]);
         return $response->getBody()->getContents();
+    }
+
+    /**
+     * Check Limit
+     * @return bool
+     */
+    public function checkLimit()
+    {
+        if (!static::$current_count) {
+            static::$current_count = Proxy::count();
+        }
+        if (static::$current_count > config('proxy.limit_count')) {
+            Log::info('代理池IP数量达到上限');
+            return false;
+        }
+        return true;
     }
 }
