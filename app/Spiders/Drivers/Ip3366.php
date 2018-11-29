@@ -8,9 +8,9 @@ class Ip3366 extends Spider
 {
     public function handle()
     {
+        $this->sleep = rand(3,5);
         $this->inputEncoding = 'GB2312';
         $this->outputEncoding = 'UTF-8';
-        $this->sleep = rand(10,15);
         $urls = [
             "http://www.ip3366.net/free/?stype=1&page=1",
             "http://www.ip3366.net/free/?stype=1&page=2",
