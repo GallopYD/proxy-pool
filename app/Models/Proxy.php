@@ -59,7 +59,7 @@ class Proxy extends Model
         $proxies = self::query()
             ->orderByDesc('checked_at')
             ->orderBy('speed')
-            ->paginate(30);
+            ->paginate(20);
         return $proxies;
     }
 }

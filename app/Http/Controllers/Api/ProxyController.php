@@ -32,6 +32,7 @@ class ProxyController extends Controller
      */
     public function check(Request $request)
     {
+        $id = $request->id;
         $ip = $request->ip;
         $port = $request->port;
         $protocol = $request->protocol;
@@ -46,7 +47,11 @@ class ProxyController extends Controller
             ]);
             return $response->getBody()->getContents();
         } catch (\Exception $exception) {
-            return '测速失败：' . $exception->getMessage();
+            if ($proxy = Proxy::find($id)) {
+                $proxy->delete();
+            }
+            $msg = '测速失败：' . $exception->getMessage();
+            return response($msg)->setStatusCode($exception->getCode());
         }
 
     }
