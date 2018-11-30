@@ -34,12 +34,12 @@ class CommonUtil
      * 获取可用代理
      * @param $anonymity
      * @return bool|\Illuminate\Database\Eloquent\Model|null|object|static
+     * @throws \Exception
      */
     public static function getValidProxy($anonymity)
     {
-        $proxy = Proxy::getNewest($anonymity);
-        if ($proxy) {
-            if (Tester::check($proxy->ip, $proxy->port, $proxy->protocol)) {
+        if ($proxy = Proxy::getNewest($anonymity)) {
+            if (Tester::check($proxy)) {
                 return $proxy;
             } else {
                 self::getValidProxy($anonymity);

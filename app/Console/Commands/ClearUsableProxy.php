@@ -6,21 +6,21 @@ use App\Models\Proxy;
 use App\Spiders\Tester;
 use Illuminate\Console\Command;
 
-class TestProxy extends Command
+class ClearUsableProxy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'proxy:test';
+    protected $signature = 'proxy:clear-usable';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Testing Proxy';
+    protected $description = '可用代理清洗';
 
     /**
      * Create a new command instance.
@@ -39,15 +39,14 @@ class TestProxy extends Command
      */
     public function handle()
     {
-        //每次检测数量
-        $count = config('proxy.test_count');
-
         $tester = Tester::getInstance();
-        $proxies = Proxy::query()->orderBy('updated_at')
-            ->limit($count)
-            ->get();
-        $proxies->each(function ($proxy) use ($tester) {
-            $tester->handle($proxy);
-        });
+        Proxy::where('checked_times', '>', 0)
+            ->orderBy('used_times')
+            ->orderBy('updated_at')
+            ->chunk(500, function ($proxies) use ($tester) {
+                $proxies->each(function ($proxy) use ($tester) {
+                    $tester->handle($proxy);
+                });
+            });
     }
 }

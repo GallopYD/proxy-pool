@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CrawlProxy;
-use App\Console\Commands\TestProxy;
+use App\Console\Commands\ClearNewProxy;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CrawlProxy::class,
-        TestProxy::class
+        ClearNewProxy::class
     ];
 
     /**
@@ -28,7 +28,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('proxy:crawl')->everyTenMinutes();
-        $schedule->command('proxy:test')->everyMinute();
+        $schedule->command('proxy:clear-new')->everyFiveMinutes();
+        $schedule->command('proxy:clear-')->everyFiveMinutes();
     }
 
     /**
