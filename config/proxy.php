@@ -8,8 +8,8 @@ return [
 
     'check_url' => env('PROXY_CHECK_URL','http://www.baidu.com/'),
 
-    'limit_count' => env('PROXY_LIMIT_COUNT',1000),
+    'limit_count' => env('PROXY_LIMIT_COUNT',5000),
 
-    'test_count' => env('PROXY_TEST_COUNT',20),
+    'test_count' => env('PROXY_TEST_COUNT',50),
 
 ];
