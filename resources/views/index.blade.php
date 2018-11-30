@@ -1,58 +1,56 @@
 @extends('layout.html')
 
 @section('body')
-    <div class="row">
-        <div class="center-block" style="width: 80%">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">代理池</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body table-responsive no-padding ">
-                    <table class="table table-hover table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>IP</th>
-                            <th>端口</th>
-                            <th>匿名度</th>
-                            <th>类型</th>
-                            <th>响应速度</th>
-                            <th>最后验证时间</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($proxies as $key => $proxy)
-                            <tr>
-                                <td>{{ $proxy->ip }}</td>
-                                <td>{{ $proxy->port }}</td>
-                                <td>{{ __('proxy.'.$proxy->anonymity) }}</td>
-                                <td>{{ strtoupper($proxy->protocol) }}</td>
-                                <td>{{ \App\Utils\CommonUtil::formatSpeed($proxy->speed) }}</td>
-                                <td>{{ $proxy->checked_at }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-copy"
-                                            data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}">
-                                        复制
-                                    </button>
-                                    <button class="btn btn-sm btn-speed "
-                                            data-id="{{ $proxy->id }}"
-                                            data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}"
-                                            data-protocol="{{ $proxy->protocol }}"
-                                            data-ip="{{ $proxy->ip }}"
-                                            data-port="{{ $proxy->port }}">测速
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-                {{ $proxies->render() }}
+    <div class="center-block" style="width: 80%">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">代理池</h3>
             </div>
-            <!-- /.box -->
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding ">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>端口</th>
+                        <th>匿名度</th>
+                        <th>类型</th>
+                        <th>响应速度</th>
+                        <th>最后验证时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($proxies as $key => $proxy)
+                        <tr>
+                            <td>{{ $proxy->ip }}</td>
+                            <td>{{ $proxy->port }}</td>
+                            <td>{{ __('proxy.'.$proxy->anonymity) }}</td>
+                            <td>{{ strtoupper($proxy->protocol) }}</td>
+                            <td>{{ \App\Utils\CommonUtil::formatSpeed($proxy->speed) }}</td>
+                            <td>{{ $proxy->checked_at }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-copy"
+                                        data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}">
+                                    复制
+                                </button>
+                                <button class="btn btn-sm btn-speed "
+                                        data-id="{{ $proxy->id }}"
+                                        data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}"
+                                        data-protocol="{{ $proxy->protocol }}"
+                                        data-ip="{{ $proxy->ip }}"
+                                        data-port="{{ $proxy->port }}">测速
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            {{ $proxies->render() }}
         </div>
+        <!-- /.box -->
     </div>
 
     <div class="modal fade" id="modal-speed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -112,7 +110,7 @@
                 var ipAddress = $(this).attr('data-url');
                 var webLink = $('#web-link').val();
                 $('#proxy-ip-address').val(ipAddress);
-                var src = '/api/proxies/check?id='+ id +'protocol=' + protocol + '&ip=' + ip + '&port=' + port + '&web_link=' + encodeURIComponent(webLink);
+                var src = '/api/proxies/check?id=' + id + 'protocol=' + protocol + '&ip=' + ip + '&port=' + port + '&web_link=' + encodeURIComponent(webLink);
                 $('#proxy-iframe').attr('src', src)
 
             });
