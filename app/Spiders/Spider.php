@@ -136,7 +136,7 @@ class Spider
             ->wherePort($port)
             ->whereProtocol($protocol)
             ->exists();
-        if ($ip & $port & $anonymity & $protocol && !$exists && $this->checkLimit()) {
+        if (!$exists && $this->checkData($ip, $port, $anonymity, $protocol) && $this->checkLimit()) {
             $proxy = new Proxy();
             $proxy->ip = $ip;
             $proxy->port = $port;
@@ -146,6 +146,18 @@ class Spider
             static::$current_count++;
             Log::info("代理入库：$proxy");
         }
+    }
+
+    /**
+     * Check Data
+     * @return bool
+     */
+    private function checkData($ip, $port, $anonymity, $protocol)
+    {
+        if ($ip & $port & $anonymity & $protocol && filter_var($ip, FILTER_VALIDATE_IP)) {
+            return true;
+        }
+        return false;
     }
 
     /**
