@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Models\Proxy;
 use App\Http\Resources\Proxy as ProxyResource;
+use App\Utils\CommonUtil;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class ProxyController extends Controller
     public function one()
     {
         $anonymity = request('anonymity', null);
-        $proxy = Proxy::getNewest($anonymity);
+        $proxy = CommonUtil::getValidProxy($anonymity);
         if (!$proxy) {
             throw new ApiException('获取代理失败');
         }
@@ -65,6 +66,5 @@ class ProxyController extends Controller
             $msg = '测速失败：' . $exception->getMessage();
             return response($msg);
         }
-
     }
 }

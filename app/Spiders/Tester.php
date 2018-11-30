@@ -16,7 +16,6 @@ class Tester
 
     private function __construct()
     {
-        $this->time_out = config('proxy.time_out');
     }
 
     private function __clone()
@@ -40,7 +39,7 @@ class Tester
      */
     public function handle(Proxy $proxy)
     {
-        if ($speed = $this->check($proxy->ip, $proxy->port, $proxy->protocol)) {
+        if ($speed = self::check($proxy->ip, $proxy->port, $proxy->protocol)) {
             $proxy->speed = $speed;
             $proxy->checked_at = Carbon::now();
             $proxy->update();
@@ -56,7 +55,7 @@ class Tester
      * @param $protocol
      * @return bool|int
      */
-    public function check($ip, $port, $protocol)
+    public static function check($ip, $port, $protocol)
     {
         try {
             $client = new Client();
@@ -66,7 +65,7 @@ class Tester
                 'proxy' => [
                     "$protocol://$ip:$port"
                 ],
-                'timeout' => $this->time_out
+                'timeout' => 2
             ]);
             $end_seconds = CommonUtil::mSecondTime();
             $speed = intval($end_seconds - $begin_seconds);
