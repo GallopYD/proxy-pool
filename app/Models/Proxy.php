@@ -39,10 +39,13 @@ class Proxy extends Model
     /**
      * 获取最新验证代理
      */
-    public static function getNewest()
+    public static function getNewest($anonymity = null)
     {
-        $proxy = self::query()
-            ->orderByDesc('checked_at')
+        $query = self::query();
+        if ($anonymity) {
+            $query->whereAnonymity($anonymity);
+        }
+        $proxy = $query->orderByDesc('checked_at')
             ->orderBy('speed')
             ->first();
         $data = $proxy->ip . ':' . $proxy->port;
@@ -52,14 +55,23 @@ class Proxy extends Model
 
     /**
      * 获取代理列表
+     * @param $per_page
+     * @param array $condition
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function getList()
+    public static function getList($condition = [])
     {
-        $proxies = self::query()
-            ->orderByDesc('checked_at')
-            ->orderBy('speed')
-            ->paginate(20);
+        $query = self::query();
+        if (isset($condition['anonymity'])) {
+            $query->whereAnonymity($condition['anonymity']);
+        }
+        $query->orderByDesc('checked_at')
+            ->orderBy('speed');
+        if (isset($condition['per_page'])) {
+            $proxies = $query->paginate($condition['per_page']);
+        } else {
+            $proxies = $query->paginate(20);
+        }
         return $proxies;
     }
 }

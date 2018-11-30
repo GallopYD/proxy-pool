@@ -10,11 +10,12 @@ class IndexController extends Controller
 
     /**
      * 获取最新代理
-     * @return ProxyResource
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $proxies = Proxy::getList();
+        $per_page = request('per_page', 20);
+        $proxies = Proxy::getList($per_page);
         return view('index', compact('proxies'));
     }
 }
