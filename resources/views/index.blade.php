@@ -36,6 +36,7 @@
                                         复制
                                     </button>
                                     <button class="btn btn-sm btn-speed "
+                                            data-id="{{ $proxy->id }}"
                                             data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}"
                                             data-protocol="{{ $proxy->protocol }}"
                                             data-ip="{{ $proxy->ip }}"
@@ -87,12 +88,6 @@
     <script>
         $(function () {
             var loadModal = false;
-            window.setInterval(function () {
-                if (loadModal) {
-                    return;
-                }
-                window.location.reload()
-            }, 10000);
             var clipboard = new Clipboard(".btn-copy", {
                 text: function (_this) {
                     return $(_this).attr('data-url');
@@ -110,13 +105,14 @@
                 $('#modal-speed').modal({
                     'backdrop': false
                 });
+                var id = $(this).attr('data-id');
                 var protocol = $(this).attr('data-protocol');
                 var ip = $(this).attr('data-ip');
                 var port = $(this).attr('data-port');
                 var ipAddress = $(this).attr('data-url');
                 var webLink = $('#web-link').val();
                 $('#proxy-ip-address').val(ipAddress);
-                var src = '/api/proxies/check?protocol=' + protocol + '&ip=' + ip + '&port=' + port + '&web_link=' + encodeURIComponent(webLink);
+                var src = '/api/proxies/check?id='+ id +'protocol=' + protocol + '&ip=' + ip + '&port=' + port + '&web_link=' + encodeURIComponent(webLink);
                 $('#proxy-iframe').attr('src', src)
 
             });
