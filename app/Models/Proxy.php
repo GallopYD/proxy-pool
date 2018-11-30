@@ -41,6 +41,8 @@ class Proxy extends Model
 
     /**
      * 获取最新验证代理
+     * @param null $anonymity
+     * @return Model|null|object|static
      */
     public static function getNewest($anonymity = null)
     {
@@ -51,9 +53,11 @@ class Proxy extends Model
         $proxy = $query->orderByDesc('checked_at')
             ->orderBy('speed')
             ->first();
-        $tmp = $proxy;
-        $proxy->delete();
-        return $tmp;
+        if ($tmp = $proxy) {
+            $proxy->delete();
+            return $tmp;
+        }
+        return null;
     }
 
     /**
