@@ -13,12 +13,24 @@ class ProxyController extends Controller
 {
 
     /**
-     * 获取最新代理
-     * @return ProxyResource
+     * 获取代理列表
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index()
+    {
+        $condition = request()->all();
+        $proxies = Proxy::getList($condition);
+        return ProxyResource::collection($proxies);
+    }
+
+    /**
+     * 获取单条代理
+     * @return string
      */
     public function one()
     {
-        $proxy = Proxy::getNewest();
+        $anonymity = request('anonymity', null);
+        $proxy = Proxy::getNewest($anonymity);
         if (!$proxy) {
             throw new ApiException('获取代理失败');
         }
@@ -51,7 +63,7 @@ class ProxyController extends Controller
                 $proxy->delete();
             }
             $msg = '测速失败：' . $exception->getMessage();
-            return response($msg)->setStatusCode($exception->getCode());
+            return response($msg);
         }
 
     }

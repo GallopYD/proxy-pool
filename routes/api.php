@@ -18,6 +18,7 @@ Route::group([
     'middleware' => [],
     'limit' => 100,
 ], function () {
+    Route::get('proxies', 'ProxyController@index');
     Route::get('proxies/one', 'ProxyController@one');
     Route::get('proxies/check', 'ProxyController@check');
 });
