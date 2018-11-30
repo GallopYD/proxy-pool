@@ -36,6 +36,9 @@ class Proxy extends Model
 
     protected $guarded = [];
 
+    const ANONYMITY_TRANSPARENT = 'transparent';//透明
+    const ANONYMITY_ANONYMOUS = 'anonymous';//匿名
+
     /**
      * 获取最新验证代理
      */
@@ -48,9 +51,9 @@ class Proxy extends Model
         $proxy = $query->orderByDesc('checked_at')
             ->orderBy('speed')
             ->first();
-        $data = $proxy->ip . ':' . $proxy->port;
+        $tmp = $proxy;
         $proxy->delete();
-        return $data;
+        return $tmp;
     }
 
     /**

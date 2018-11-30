@@ -25,7 +25,7 @@ class ProxyController extends Controller
 
     /**
      * 获取单条代理
-     * @return string
+     * @return ProxyResource
      */
     public function one()
     {
@@ -34,7 +34,7 @@ class ProxyController extends Controller
         if (!$proxy) {
             throw new ApiException('获取代理失败');
         }
-        return $proxy;
+        return new ProxyResource($proxy);
     }
 
     /**
