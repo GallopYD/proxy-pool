@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('proxy:crawl')->everyTenMinutes();
-        $schedule->command('proxy:test')->everyFiveMinutes();
+        $schedule->command('proxy:test')->everyMinute();
     }
 
     /**

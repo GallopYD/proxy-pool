@@ -10,6 +10,6 @@ return [
 
     'limit_count' => env('PROXY_LIMIT_COUNT',1000),
 
-    'test_count' => env('PROXY_TEST_COUNT',500),
+    'test_count' => env('PROXY_TEST_COUNT',20),
 
 ];
