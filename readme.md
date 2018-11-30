@@ -4,8 +4,20 @@
 ```shell
 curl HOST/api/proxies/one
 ```
-```
-111.219.117.11:9000
+```json
+{
+	"data": {
+		"id": 1223,
+		"ip": "119.131.88.187",
+		"port": "9797",
+		"anonymity": "transparent",
+		"protocol": "https",
+		"speed": "93",
+		"checked_at": "2018-11-29 09:03:51",
+		"created_at": "2018-11-29 08:51:01",
+		"updated_at": "2018-11-29 09:03:51"
+	}
+}
 ```
 
 ### 获取代理IP列表

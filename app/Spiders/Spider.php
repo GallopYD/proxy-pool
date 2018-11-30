@@ -18,6 +18,7 @@ class Spider
     private $time_out;
 
     public $sleep;
+    public $use_proxy = false;
     public $inputEncoding;
     public $outputEncoding;
 
@@ -102,6 +103,11 @@ class Spider
                     ],
                     'timeout' => $this->time_out
                 ];
+                //使用代理IP抓取
+                if ($this->use_proxy) {
+                    $proxy = Proxy::getNewest(Proxy::ANONYMITY_ANONYMOUS);
+                    $options['proxy'] = $proxy->protocol . "://" . $proxy->ip . ":" . $proxy->port;
+                }
                 //抓取网页内容
                 $content = $this->ql->get($url, [], $options);
                 //编码设置
