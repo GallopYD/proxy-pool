@@ -27,6 +27,7 @@ class ProxyController extends Controller
     /**
      * 获取单条代理
      * @return ProxyResource
+     * @throws \Exception
      */
     public function one()
     {

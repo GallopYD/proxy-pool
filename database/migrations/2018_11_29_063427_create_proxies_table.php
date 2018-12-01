@@ -25,7 +25,7 @@ class CreateProxiesTable extends Migration
             $table->timestamp('last_checked_at')->nullable()->comment('最后检测时间');
             $table->timestamps();
             $table->unique(['ip', 'port', 'protocol']);
-            $table->index(['anonymity','checked_times', 'used_times']);
+            $table->index(['used_times', 'checked_times', 'speed']);
         });
     }
 

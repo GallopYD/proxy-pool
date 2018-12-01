@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('proxy:crawl')->everyTenMinutes();
         $schedule->command('proxy:clear-new')->everyFiveMinutes();
-        $schedule->command('proxy:clear-')->everyFiveMinutes();
+        $schedule->command('proxy:clear-usable')->everyFiveMinutes();
     }
 
     /**

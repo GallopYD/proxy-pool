@@ -57,9 +57,11 @@ class Tester
             $check_url = config('proxy.check_url');
             $begin_seconds = CommonUtil::mSecondTime();
             $proxy_url = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
-            $response = $client->request('GET', $check_url, [
-                'proxy' => [$proxy_url],
-                'timeout' => 2
+            $response = $client->request('GET', 'http://cgi.urlsec.qq.com/index.php?m=check&a=check&url=http://www.baidu.com', [
+                'headers' => ['Referer' => 'https://guanjia.qq.com'],
+                'proxy' => [$proxy],
+                'connect_timeout' => 2,
+                'timeout' => 2,
             ]);
             $end_seconds = CommonUtil::mSecondTime();
             $speed = intval($end_seconds - $begin_seconds);
