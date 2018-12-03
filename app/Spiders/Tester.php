@@ -58,7 +58,7 @@ class Tester
             $begin_seconds = CommonUtil::mSecondTime();
             $proxy_url = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             $response = $client->request('GET', $check_url, [
-                'proxy' => [$proxy],
+                'proxy' => $proxy_url,
                 'connect_timeout' => 2,
                 'timeout' => 2,
             ]);
