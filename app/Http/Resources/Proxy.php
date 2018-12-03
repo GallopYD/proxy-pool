@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Proxy extends JsonResource
@@ -23,7 +24,7 @@ class Proxy extends JsonResource
             'speed' => $this->speed,
             'used_times' => $this->used_times,
             'checked_times' => $this->checked_times,
-            'last_checked_at' => $this->last_checked_at ? $this->last_checked_at->format('Y-m-d H:i:s') : '',
+            'last_checked_at' => $this->last_checked_at ? Carbon::parse($this->last_checked_at)->format('Y-m-d H:i:s') : '',
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

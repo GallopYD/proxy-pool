@@ -30,22 +30,4 @@ class CommonUtil
         return printf("%.2f", ($speed / 1000)) . '秒';
     }
 
-    /**
-     * 获取可用代理
-     * @param $anonymity
-     * @return bool|\Illuminate\Database\Eloquent\Model|null|object|static
-     * @throws \Exception
-     */
-    public static function getValidProxy($anonymity)
-    {
-        if ($proxy = Proxy::getNewest($anonymity)) {
-            if (Tester::check($proxy)) {
-                return $proxy;
-            } else {
-                self::getValidProxy($anonymity);
-            }
-        }
-        return false;
-    }
-
 }
