@@ -2,8 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\CrawlProxy;
-use App\Console\Commands\ClearNewProxy;
+use App\Console\Commands\ProxyCrawl;
+use App\Console\Commands\ProxyClear;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CrawlProxy::class,
-        ClearNewProxy::class
+        ProxyCrawl::class,
+        ProxyClear::class
     ];
 
     /**
@@ -27,9 +27,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //代理爬取
         $schedule->command('proxy:crawl')->everyTenMinutes();
-        $schedule->command('proxy:clear-new')->everyFiveMinutes();
-        $schedule->command('proxy:clear-usable')->everyFiveMinutes();
+        //代理清洗
+        $schedule->command('proxy:clear 0')->everyMinute();
+        $schedule->command('proxy:clear 1')->everyMinute();
+        $schedule->command('proxy:clear 2')->everyMinute();
+        $schedule->command('proxy:clear 3')->everyMinute();
+        $schedule->command('proxy:clear 4')->everyMinute();
     }
 
     /**

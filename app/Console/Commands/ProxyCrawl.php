@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Spiders\Spider;
 use Illuminate\Console\Command;
 
-class CrawlProxy extends Command
+class ProxyCrawl extends Command
 {
     /**
      * The name and signature of the console command.
