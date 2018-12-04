@@ -9,7 +9,7 @@ class Xicidaili extends Spider
     public function handle()
     {
         $this->sleep = rand(5,10);
-        $this->use_proxy = true;
+//        $this->use_proxy = true;
         $urls = [
             "http://www.xicidaili.com/nn/",
             "http://www.xicidaili.com/nn/2",
