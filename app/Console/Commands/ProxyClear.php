@@ -42,10 +42,13 @@ class ProxyClear extends Command
     {
         //余数
         $remainder = $this->argument('remainder');
+        //时间间隔5分钟
+        $time_limit = Carbon::now()->subMinutes(5);
 
         $tester = Tester::getInstance();
         $proxies = Proxy::query()
             ->whereRaw("id % 5 = {$remainder}")
+            ->where('last_checked_at', '<', $time_limit)
             ->orderBy('last_checked_at')
             ->take(10)
             ->get();
