@@ -50,7 +50,7 @@ class ProxyClear extends Command
             ->whereRaw("id % 5 = {$remainder}")
             ->where('last_checked_at', '<', $time_limit)
             ->orderBy('last_checked_at')
-            ->take(10)
+            ->take(20)
             ->get();
         $proxies->each(function ($proxy) use ($tester) {
             $tester->handle($proxy);
