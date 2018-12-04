@@ -77,8 +77,8 @@ class Proxy extends Model
         if (isset($condition['anonymity'])) {
             $query->whereAnonymity($condition['anonymity']);
         }
-        $query->orderBy('used_times')
-            ->orderByDesc('checked_times')
+        $query->orderByDesc('checked_times')
+            ->orderBy('used_times')
             ->orderBy('speed')
             ->orderByDesc('last_checked_at');
         if (isset($condition['per_page'])) {
