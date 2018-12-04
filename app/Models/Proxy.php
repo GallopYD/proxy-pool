@@ -54,8 +54,8 @@ class Proxy extends Model
             $query->whereAnonymity($anonymity);
         }
         $proxy = $query->where('checked_times', '>', '1')
-            ->orderBy('used_times')
             ->orderByDesc('checked_times')
+            ->orderBy('used_times')
             ->orderByDesc('last_checked_at')
             ->first();
         if ($proxy) {

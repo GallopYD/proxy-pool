@@ -7,6 +7,7 @@ return [
     'time_out' => env('PROXY_TIME_OUT',3),
 
     'check_url' => env('PROXY_CHECK_URL','http://www.baidu.com/'),
+    'check_keyword' => env('PROXY_CHECK_KEYWORD','百度一下'),
 
     'limit_count' => env('PROXY_LIMIT_COUNT',100000),
 

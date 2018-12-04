@@ -55,6 +55,7 @@ class Tester
         try {
             $client = new Client();
             $check_url = config('proxy.check_url');
+            $check_keyword = config('proxy.check_keyword');
             $begin_seconds = CommonUtil::mSecondTime();
             $proxy_url = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             $response = $client->request('GET', $check_url, [
@@ -62,16 +63,20 @@ class Tester
                 'connect_timeout' => 2,
                 'timeout' => 2,
             ]);
-            $end_seconds = CommonUtil::mSecondTime();
-            $speed = intval($end_seconds - $begin_seconds);
-            //代理更新
-            $proxy->update([
-                'speed' => $speed,
-                'checked_times' => ++$proxy->checked_times,
-                'last_checked_at' => Carbon::now(),
-            ]);
-            Log::info("代理检测成功[{$proxy_url}]：$speed ms[{$response->getStatusCode()}]");
-            return true;
+            if (strpos($response->getBody()->getContents(), $check_keyword) !== false) {
+                $end_seconds = CommonUtil::mSecondTime();
+                $speed = intval($end_seconds - $begin_seconds);
+                //代理更新
+                $proxy->update([
+                    'speed' => $speed,
+                    'checked_times' => ++$proxy->checked_times,
+                    'last_checked_at' => Carbon::now(),
+                ]);
+                Log::info("代理检测成功[{$proxy_url}]：$speed ms[{$response->getStatusCode()}]");
+                return true;
+            } else {
+                throw new \Exception('检测结果不包含关键字');
+            }
         } catch (\Exception $exception) {
             //代理删除
             $proxy->delete();
