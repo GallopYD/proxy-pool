@@ -28,7 +28,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //代理爬取
-        $schedule->command('proxy:crawl')->everyFiveMinutes();
+        $schedule->command('proxy:crawl Data5u')->everyTenMinutes();
+        $schedule->command('proxy:crawl Ip3366')->everyTenMinutes();
+        $schedule->command('proxy:crawl Kuaidaili')->everyTenMinutes();
+        $schedule->command('proxy:crawl Xicidaili')->everyTenMinutes();
+        $schedule->command('proxy:crawl Fatezero')->hourly();
+
         //代理清洗
         $schedule->command('proxy:clear 0')->everyMinute();
         $schedule->command('proxy:clear 1')->everyMinute();
