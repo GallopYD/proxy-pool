@@ -38,10 +38,8 @@ class ProxyCrawl extends Command
      */
     public function handle()
     {
-        if (!$drivers = $this->argument('drivers')) {
-            $drivers = config('proxy.drivers');
-        }
-        $drivers = explode('|', $drivers);
+        $drivers_path = app_path('Spiders/Drivers');
+        $drivers = array_values(array_diff(scandir($drivers_path), array('..', '.')));
         $spider = Spider::getInstance();
         foreach ($drivers as $driver) {
             $spider->setDriver($driver);
