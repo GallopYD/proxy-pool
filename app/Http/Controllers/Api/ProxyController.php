@@ -54,7 +54,9 @@ class ProxyController extends Controller
             $client = new Client();
             $response = $client->request('GET', $web_link, [
                 'proxy' => "$protocol://$ip:$port",
-                'timeout' => config('proxy.time_out')
+                'verify' => false,
+                'connect_timeout' => config('proxy.connect_timeout'),
+                'timeout' => config('proxy.timeout')
             ]);
             return $response->getBody()->getContents();
         } catch (\Exception $exception) {

@@ -25,7 +25,8 @@ class Spider
     private function __construct()
     {
         $this->ql = QueryList::getInstance();
-        $this->time_out = config('proxy.time_out');
+        $this->time_out = config('proxy.timeout');
+        $this->connect_timeout = config('proxy.connect_timeout');
     }
 
     private function __clone()
@@ -101,6 +102,7 @@ class Spider
                         'Host' => $host,
                         'DNT' => "1",
                     ],
+                    'connect_timeout' => $this->connect_timeout,
                     'timeout' => $this->time_out
                 ];
                 //使用代理IP抓取
@@ -198,6 +200,6 @@ class Spider
             'Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3',
             'Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3'
         ];
-        return $user_agents[rand(0,count($user_agents)-1)];
+        return $user_agents[rand(0, count($user_agents) - 1)];
     }
 }

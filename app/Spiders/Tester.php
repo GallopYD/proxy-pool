@@ -60,8 +60,9 @@ class Tester
             $proxy_url = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             $response = $client->request('GET', $check_url, [
                 'proxy' => $proxy_url,
-                'connect_timeout' => 2,
-                'timeout' => 2,
+                'verify' => false,
+                'connect_timeout' => config('proxy.connect_timeout'),
+                'timeout' => config('proxy.timeout')
             ]);
             if (strpos($response->getBody()->getContents(), $check_keyword) !== false) {
                 $end_seconds = CommonUtil::mSecondTime();
