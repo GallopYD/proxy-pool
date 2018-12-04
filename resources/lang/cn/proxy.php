@@ -7,5 +7,7 @@
  */
 return [
     'transparent' => '透明',
-    'anonymous' => '高匿',
+    'distorting' => '混淆',
+    'anonymous' => '匿名',
+    'high_anonymous' => '高匿',
 ];

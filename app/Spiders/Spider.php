@@ -15,8 +15,9 @@ class Spider
 
     private $ql;
     private $driver;
-    private $time_out;
 
+    public $timeout;
+    public $connect_timeout;
     public $sleep;
     public $use_proxy = false;
     public $inputEncoding;
@@ -25,7 +26,7 @@ class Spider
     private function __construct()
     {
         $this->ql = QueryList::getInstance();
-        $this->time_out = config('proxy.timeout');
+        $this->timeout = config('proxy.timeout');
         $this->connect_timeout = config('proxy.connect_timeout');
     }
 
@@ -79,12 +80,12 @@ class Spider
     }
 
     /**
-     * Process
+     * QueryList Process
      * @param $urls
      * @param $table_selector
      * @param $map_func
      */
-    protected function process($urls, $table_selector, $map_func)
+    protected function queryListProcess($urls, $table_selector, $map_func)
     {
         foreach ($urls as $url) {
             //代理池上限判断
@@ -103,7 +104,7 @@ class Spider
                         'DNT' => "1",
                     ],
                     'connect_timeout' => $this->connect_timeout,
-                    'timeout' => $this->time_out
+                    'timeout' => $this->timeout
                 ];
                 //使用代理IP抓取
                 if ($this->use_proxy && $proxy = Proxy::getNewest()) {
@@ -124,6 +125,43 @@ class Spider
                     //代理入库
                     $this->addProxy($ip, $port, $anonymity, $protocol);
                 });
+            } catch (\Exception $e) {
+                Log::error("代理爬取失败[url:{$url}]：" . $e->getMessage());
+            }
+            if ($this->sleep) {
+                sleep($this->sleep);
+            }
+        }
+    }
+
+    /**
+     *  Regex Process
+     * @param $urls
+     * @param $pattern
+     * @param $map_func
+     */
+    protected function regexProcess($urls, $pattern, $map_func)
+    {
+        ini_set('memory_limit', '1024M');
+        foreach ($urls as $url) {
+            //代理池上限判断
+            if (!$this->checkLimit()) {
+                break;
+            }
+            try {
+                $client = new Client();
+                $response = $client->request('GET', $url, [
+                    'connect_timeout' => $this->connect_timeout,
+                    'timeout' => $this->timeout
+                ]);
+                $data = $response->getBody()->getContents();
+                preg_match_all($pattern, $data, $matches);
+                foreach ($matches[0] as $row) {
+                    //获取IP、端口、透明度、协议
+                    list($ip, $port, $anonymity, $protocol) = call_user_func_array($map_func, [$row]);
+                    //代理入库
+                    $this->addProxy($ip, $port, $anonymity, $protocol);
+                }
             } catch (\Exception $e) {
                 Log::error("代理爬取失败[url:{$url}]：" . $e->getMessage());
             }
@@ -161,7 +199,7 @@ class Spider
      */
     private function checkData($ip, $port, $anonymity, $protocol)
     {
-        if ($ip & $port & $anonymity & $protocol && filter_var($ip, FILTER_VALIDATE_IP)) {
+        if ($ip && $port && $anonymity && $protocol && filter_var($ip, FILTER_VALIDATE_IP)) {
             return true;
         }
         return false;

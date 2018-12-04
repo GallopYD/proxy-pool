@@ -21,7 +21,7 @@ class Kuaidaili extends Spider
             "http://www.kuaidaili.com/free/intr/4/",
             "http://www.kuaidaili.com/free/intr/5/",
         ];
-        $this->process($urls, "#list table tbody tr", function ($tr) {
+        $this->queryListProcess($urls, "#list table tbody tr", function ($tr) {
             $ip = $tr->find('td:eq(0)')->text();
             $port = $tr->find('td:eq(1)')->text();
             $anonymity = str_contains($tr->find('td:eq(2)')->text(), ["高匿"]) ? 'anonymous' : 'transparent';

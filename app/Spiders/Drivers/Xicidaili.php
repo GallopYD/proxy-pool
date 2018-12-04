@@ -25,7 +25,7 @@ class Xicidaili extends Spider
             "http://www.xicidaili.com/nt/3",
         ];
 
-        $this->process($urls, "table#ip_list tr", function ($tr) {
+        $this->queryListProcess($urls, "table#ip_list tr", function ($tr) {
             $ip = $tr->find('td:eq(1)')->text();
             $port = $tr->find('td:eq(2)')->text();
             $anonymity = $tr->find('td:eq(4)')->text() == "高匿" ? 'anonymous' : 'transparent';

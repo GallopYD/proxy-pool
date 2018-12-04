@@ -17,7 +17,7 @@ class Data5u extends Spider
             "http://www.data5u.com/free/gwpt/index.shtml"
         ];
 
-        $this->process($urls, "ul.l2", function ($tr) {
+        $this->queryListProcess($urls, "ul.l2", function ($tr) {
             $ip = $tr->find('li:eq(0)')->text();
             $port = $tr->find('li:eq(1)')->text();
             $anonymity = $tr->find('li:eq(2)')->text() == '高匿' ? 'anonymous' : 'transparent';
