@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -53,10 +54,11 @@ class Proxy extends Model
         if ($anonymity) {
             $query->whereAnonymity($anonymity);
         }
-        $proxy = $query->where('checked_times', '>', '1')
-            ->orderByDesc('checked_times')
+        $time = Carbon::now()->subMinutes(2);
+        $proxy = $query->where('checked_times', '>', '1')//检测次数大于1
+            ->where('last_checked_at', '>', $time)//2分钟内检测过
             ->orderBy('used_times')
-            ->orderByDesc('last_checked_at')
+            ->orderByDesc('checked_times')
             ->first();
         if ($proxy) {
             $proxy->used_times += 1;
