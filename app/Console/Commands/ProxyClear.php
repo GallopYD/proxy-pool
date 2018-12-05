@@ -44,7 +44,7 @@ class ProxyClear extends Command
         $remainder = $this->argument('remainder');
         $tester = Tester::getInstance();
         $proxies = Proxy::query()
-            ->whereRaw("id % 3 = {$remainder}")
+            ->whereRaw("id % 5 = {$remainder}")
             ->orderBy('last_checked_at')
             ->take(30)
             ->get();
