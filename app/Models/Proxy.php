@@ -54,9 +54,9 @@ class Proxy extends Model
         if ($anonymity) {
             $query->whereAnonymity($anonymity);
         }
-        $time = Carbon::now()->subMinutes(10);
-        $proxy = $query->where('checked_times', '>', '1')//检测次数大于1
-            ->where('last_checked_at', '>', $time)//10分钟内检测过
+        $time = Carbon::now()->subMinutes(2);
+        $proxy = $query->where('checked_times', '>=', '1')//检测次数大于1
+            ->where('last_checked_at', '>', $time)//2分钟内检测过
             ->orderBy('used_times')
             ->orderByDesc('checked_times')
             ->first();
