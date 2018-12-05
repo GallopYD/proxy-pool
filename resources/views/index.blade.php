@@ -38,13 +38,13 @@
                                         data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}">
                                     复制
                                 </button>
-                                <button class="btn btn-sm btn-speed "
-                                        data-id="{{ $proxy->id }}"
-                                        data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}"
-                                        data-protocol="{{ $proxy->protocol }}"
-                                        data-ip="{{ $proxy->ip }}"
-                                        data-port="{{ $proxy->port }}">测速
-                                </button>
+                                {{--<button class="btn btn-sm btn-speed "--}}
+                                        {{--data-id="{{ $proxy->id }}"--}}
+                                        {{--data-url="{{ sprintf("%s://%s:%s",$proxy->protocol,$proxy->ip,$proxy->port) }}"--}}
+                                        {{--data-protocol="{{ $proxy->protocol }}"--}}
+                                        {{--data-ip="{{ $proxy->ip }}"--}}
+                                        {{--data-port="{{ $proxy->port }}">测速--}}
+                                {{--</button>--}}
                             </td>
                         </tr>
                     @endforeach
