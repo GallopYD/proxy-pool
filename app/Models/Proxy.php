@@ -46,31 +46,6 @@ class Proxy extends Model
     const ANONYMITY_HIGH_ANONYMOUS = 'high_anonymous';//高匿
 
     /**
-     * 获取最新验证代理
-     * @param null $anonymity
-     * @return Model|null|object|static
-     */
-    public static function getNewest($anonymity = null)
-    {
-        $query = self::query();
-        if ($anonymity) {
-            $query->whereAnonymity($anonymity);
-        }
-        $time = Carbon::now()->subMinutes(2);
-        $proxy = $query->where('checked_times', '>=', '1')//检测次数大于1
-        ->where('last_checked_at', '>', $time)//2分钟内检测过
-        ->orderBy('used_times')
-            ->orderByDesc('checked_times')
-            ->first();
-        if ($proxy) {
-            $proxy->used_times += 1;
-            $proxy->update();
-            return $proxy;
-        }
-        return null;
-    }
-
-    /**
      * 获取代理列表
      * @param array $condition
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -91,5 +66,19 @@ class Proxy extends Model
             $proxies = $query->paginate(20);
         }
         return $proxies;
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        //检查超过30次或存活时间超过一天，则认定为稳定代理
+        if ($this->checked_times >= 30 || $this->created_at->lt(Carbon::now()->subDay())) {
+            $proxy = $this->toArray();
+            unset($proxy['id']);
+            $proxy['last_checked_at'] = Carbon::now();
+            StableProxy::insert($proxy);
+            $this->delete();
+        } else {
+            parent::update($attributes, $options);
+        }
     }
 }

@@ -35,11 +35,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('proxy:crawl Fatezero')->hourly();
 
         //代理清洗
-        $schedule->command('proxy:clear 0')->cron('*/2 * * * *');;
-        $schedule->command('proxy:clear 1')->cron('*/2 * * * *');;
-        $schedule->command('proxy:clear 2')->cron('*/2 * * * *');;
-        $schedule->command('proxy:clear 3')->cron('*/2 * * * *');;
-        $schedule->command('proxy:clear 4')->cron('*/2 * * * *');;
+        $schedule->command('proxy:clear 0')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear 1')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear 2')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear 3')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear 4')->cron('*/2 * * * *');
+
+        //稳定代理清洗
+        $schedule->command('stable-proxy:clear')->everyMinute();
     }
 
     /**

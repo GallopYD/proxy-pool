@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProxiesTable extends Migration
+class CreateStableProxiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProxiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('proxies', function (Blueprint $table) {
+        Schema::create('stable_proxies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('ip', 15)->comment('IP地址');
             $table->string('port', 5)->comment('端口');
@@ -35,6 +35,6 @@ class CreateProxiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('proxies');
+        Schema::dropIfExists('stable_proxies');
     }
 }
