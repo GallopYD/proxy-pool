@@ -3,6 +3,7 @@
 namespace App\Spiders;
 
 use App\Models\Proxy;
+use App\Models\StableProxy;
 use App\Utils\CommonUtil;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -36,21 +37,21 @@ class Tester
 
     /**
      * Handle
-     * @param Proxy $proxy
+     * @param Proxy|StableProxy $proxy
      * @throws \Exception
      */
-    public function handle(Proxy $proxy)
+    public function handle($proxy)
     {
         self::check($proxy);
     }
 
     /**
      * Check Proxy
-     * @param Proxy $proxy
+     * @param Proxy|StableProxy $proxy
      * @return bool
      * @throws \Exception
      */
-    public static function check(Proxy $proxy)
+    public static function check($proxy)
     {
         try {
             $client = new Client();
