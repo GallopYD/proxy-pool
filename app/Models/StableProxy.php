@@ -55,7 +55,7 @@ class StableProxy extends Model
         if ($anonymity) {
             $query->whereAnonymity($anonymity);
         }
-        $time = Carbon::now()->subMinutes(2);//2分组内检测过
+        $time = Carbon::now()->subMinutes(3);//3分钟内检测过
         $proxy = $query->where('last_checked_at', '>', $time)
             ->orderBy('used_times')
             ->orderByDesc('checked_times')

@@ -3,6 +3,7 @@
 namespace App\Spiders;
 
 use App\Models\Proxy;
+use App\Models\StableProxy;
 use GuzzleHttp\Client;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use \QL\QueryList;
@@ -107,7 +108,7 @@ class Spider
                     'timeout' => $this->timeout
                 ];
                 //使用代理IP抓取
-                if ($this->use_proxy && $proxy = Proxy::getNewest()) {
+                if ($this->use_proxy && $proxy = StableProxy::getNewest()) {
                     $options['proxy'] = $proxy->protocol . "://" . $proxy->ip . ":" . $proxy->port;
                 }
                 //抓取网页内容
