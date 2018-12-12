@@ -33,7 +33,7 @@ class ProxyController extends Controller
         $anonymity = request('anonymity', null);
         $proxy = StableProxy::getNewest($anonymity);
         if (!$proxy) {
-            throw new ApiException('获取代理失败');
+            return response()->json([]);
         }
         return new ProxyResource($proxy);
     }
