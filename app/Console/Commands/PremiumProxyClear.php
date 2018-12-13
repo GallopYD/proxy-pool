@@ -2,27 +2,27 @@
 
 namespace App\Console\Commands;
 
-use App\Models\StableProxy;
+use App\Models\PremiumProxy;
 use App\Spiders\Tester;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
-class StableProxyClear extends Command
+class PremiumProxyClear extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'stable-proxy:clear';
+    protected $signature = 'premium-proxy:clear';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '稳定代理清洗';
+    protected $description = '优质代理清洗';
 
     /**
      * Create a new command instance.
@@ -42,11 +42,11 @@ class StableProxyClear extends Command
     public function handle()
     {
         $tester = Tester::getInstance();
-        $proxies = StableProxy::query()
+        $proxies = PremiumProxy::query()
             ->orderBy('last_checked_at')
             ->take(20)
             ->get();
-        $redis_key = StableProxy::getRedisKey();
+        $redis_key = PremiumProxy::getRedisKey();
         $proxies->each(function ($proxy) use ($tester, $redis_key) {
             $proxy_ip = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             if ($speed = $tester->handle($proxy_ip)) {

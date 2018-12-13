@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Proxy as ProxyResource;
+use App\Models\PremiumProxy;
 use App\Models\StableProxy;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -24,14 +24,29 @@ class ProxyController extends Controller
     }
 
     /**
-     * 获取单条代理
+     * 获取稳定代理
      * @return ProxyResource
      * @throws \Exception
      */
-    public function one()
+    public function stable()
     {
         $anonymity = request('anonymity', null);
         $proxy = StableProxy::getNewest($anonymity);
+        if (!$proxy) {
+            return response()->json([]);
+        }
+        return new ProxyResource($proxy);
+    }
+
+    /**
+     * 获取优质代理
+     * @return ProxyResource
+     * @throws \Exception
+     */
+    public function premium()
+    {
+        $anonymity = request('anonymity', null);
+        $proxy = PremiumProxy::getNewest($anonymity);
         if (!$proxy) {
             return response()->json([]);
         }

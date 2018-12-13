@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redis;
 
 /**
  * App\Models\StableProxy
@@ -20,12 +18,14 @@ use Illuminate\Support\Facades\Redis;
  * @property string|null $last_checked_at 最后检测时间
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $fail_times 失败次数
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereAnonymity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereCheckedTimes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereFailTimes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereLastCheckedAt($value)
@@ -36,65 +36,25 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StableProxy whereUsedTimes($value)
  * @mixin \Eloquent
  */
-class StableProxy extends Model
+class StableProxy extends Proxy
 {
     protected $guarded = [];
 
-    const ANONYMITY_TRANSPARENT = 'transparent';//透明
-    const ANONYMITY_DISTORTING = 'distorting';//混淆
-    const ANONYMITY_ANONYMOUS = 'anonymous';//匿名
-    const ANONYMITY_HIGH_ANONYMOUS = 'high_anonymous';//高匿
-
-    /**
-     * 获取最新验证代理
-     * @param null $anonymity
-     * @return Model|null|object|static
-     */
-    public static function getNewest($anonymity = null)
+    public function update(array $attributes = [], array $options = [])
     {
-        if ($data = Redis::lpop('proxy')) {
-            $data = json_decode($data);
-            $proxy = StableProxy::find($data->id);
-        }
-        if (!isset($proxy)) {
-            $query = self::query();
-            if ($anonymity) {
-                $query->whereAnonymity($anonymity);
-            }
-            $time = Carbon::now()->subMinutes(5);//5分钟内检测过
-            $proxy = $query->where('last_checked_at', '>', $time)
-                ->orderBy('used_times')
-                ->orderByDesc('checked_times')
-                ->first();
-        }
-        if ($proxy) {
-            $proxy->used_times += 1;
-            $proxy->update();
-            return $proxy;
-        }
-        return null;
-    }
-
-    /**
-     * 获取代理列表
-     * @param array $condition
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public static function getList($condition = [])
-    {
-        $query = self::query();
-        if (isset($condition['anonymity'])) {
-            $query->whereAnonymity($condition['anonymity']);
-        }
-        $query->orderByDesc('last_checked_at')
-            ->orderByDesc('checked_times')
-            ->orderBy('used_times')
-            ->orderBy('speed');
-        if (isset($condition['per_page'])) {
-            $proxies = $query->paginate($condition['per_page']);
+        //检查超过100次归为优质代理
+        if ($this->checked_times >= 100) {
+            $proxy = $this->toArray();
+            unset($proxy['id']);
+            unset($proxy['fail_times']);
+            $proxy['last_checked_at'] = Carbon::now();
+            PremiumProxy::insert($proxy);
+            $this->delete();
+        } elseif ($this->fail_times > 3) {
+            //稳定代理连续失败3次，自动剔除
+            $this->delete();
         } else {
-            $proxies = $query->paginate(20);
+            parent::update($attributes, $options);
         }
-        return $proxies;
     }
 }

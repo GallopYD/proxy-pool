@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * App\Models\Proxy
@@ -40,10 +41,45 @@ class Proxy extends Model
 
     protected $guarded = [];
 
+    const REDIS_KEY_COMMON = 'proxy:common';
+    const REDIS_KEY_STABLE = 'proxy:stable';
+    const REDIS_KEY_PREMIUM = 'proxy:premium';
+
     const ANONYMITY_TRANSPARENT = 'transparent';//透明
     const ANONYMITY_DISTORTING = 'distorting';//混淆
     const ANONYMITY_ANONYMOUS = 'anonymous';//匿名
     const ANONYMITY_HIGH_ANONYMOUS = 'high_anonymous';//高匿
+
+    /**
+     * 获取最新验证代理
+     * @param null $anonymity
+     * @return Model|null|object|static
+     */
+    public static function getNewest($anonymity = null)
+    {
+        $redis_key = self::getRedisKey();
+        if ($data = Redis::lpop($redis_key)) {
+            $data = json_decode($data);
+            $proxy = StableProxy::find($data->id);
+        }
+        if (!isset($proxy)) {
+            $query = self::query();
+            if ($anonymity) {
+                $query->whereAnonymity($anonymity);
+            }
+            $time = Carbon::now()->subMinutes(5);//5分钟内检测过
+            $proxy = $query->where('last_checked_at', '>', $time)
+                ->orderBy('used_times')
+                ->orderByDesc('checked_times')
+                ->first();
+        }
+        if ($proxy) {
+            $proxy->used_times += 1;
+            $proxy->update();
+            return $proxy;
+        }
+        return null;
+    }
 
     /**
      * 获取代理列表
@@ -68,10 +104,24 @@ class Proxy extends Model
         return $proxies;
     }
 
+    /**
+     * @return string
+     */
+    public static function getRedisKey()
+    {
+        if (get_called_class() == StableProxy::class) {
+            return self::REDIS_KEY_STABLE;
+        } elseif (get_called_class() == PremiumProxy::class) {
+            return self::REDIS_KEY_PREMIUM;
+        } else {
+            return self::REDIS_KEY_COMMON;
+        }
+    }
+
     public function update(array $attributes = [], array $options = [])
     {
-        //检查超过30次或存活时间超过一天，则认定为稳定代理
-        if ($this->checked_times >= 30 || $this->created_at->lt(Carbon::now()->subDay())) {
+        //检查超过30次归为稳定代理
+        if (!($this instanceof StableProxy || $this instanceof PremiumProxy) && $this->checked_times >= 30) {
             $proxy = $this->toArray();
             unset($proxy['id']);
             $proxy['last_checked_at'] = Carbon::now();

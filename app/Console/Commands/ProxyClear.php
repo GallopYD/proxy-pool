@@ -49,7 +49,16 @@ class ProxyClear extends Command
             ->take(60)
             ->get();
         $proxies->each(function ($proxy) use ($tester) {
-            $tester->handle($proxy);
+            $proxy_ip = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
+            if ($speed = $tester->handle($proxy_ip)) {
+                $proxy->update([
+                    'speed' => $speed,
+                    'checked_times' => ++$proxy->checked_times,
+                    'last_checked_at' => Carbon::now(),
+                ]);
+            } else {
+                $proxy->delete();
+            }
         });
     }
 }
