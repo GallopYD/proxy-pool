@@ -8,6 +8,7 @@ use App\Utils\CommonUtil;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use \Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class Tester
 {
@@ -74,6 +75,12 @@ class Tester
                     'checked_times' => ++$proxy->checked_times,
                     'last_checked_at' => Carbon::now(),
                 ]);
+                if ($proxy instanceof StableProxy) {
+                    if (Redis::llen('proxy') > 1000) {
+                        Redis::ltrim('proxy', 1, 100);
+                    }
+                    Redis::lpush('proxy', json_encode($proxy));
+                }
                 Log::info("代理检测成功[{$proxy_url}]：$speed ms[{$response->getStatusCode()}]");
                 return true;
             } else {

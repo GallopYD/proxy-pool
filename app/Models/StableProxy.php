@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * App\Models\StableProxy
@@ -51,15 +52,21 @@ class StableProxy extends Model
      */
     public static function getNewest($anonymity = null)
     {
-        $query = self::query();
-        if ($anonymity) {
-            $query->whereAnonymity($anonymity);
+        if ($data = Redis::lpop('proxy')) {
+            $data = json_decode($data);
+            $proxy = StableProxy::find($data->id);
         }
-        $time = Carbon::now()->subMinutes(5);//5分钟内检测过
-        $proxy = $query->where('last_checked_at', '>', $time)
-            ->orderBy('used_times')
-            ->orderByDesc('checked_times')
-            ->first();
+        if (!isset($proxy)) {
+            $query = self::query();
+            if ($anonymity) {
+                $query->whereAnonymity($anonymity);
+            }
+            $time = Carbon::now()->subMinutes(5);//5分钟内检测过
+            $proxy = $query->where('last_checked_at', '>', $time)
+                ->orderBy('used_times')
+                ->orderByDesc('checked_times')
+                ->first();
+        }
         if ($proxy) {
             $proxy->used_times += 1;
             $proxy->update();
