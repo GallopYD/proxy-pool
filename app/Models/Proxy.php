@@ -40,10 +40,7 @@ class Proxy extends Model
 {
 
     protected $guarded = [];
-
-    const REDIS_KEY_COMMON = 'proxy:common';
-    const REDIS_KEY_STABLE = 'proxy:stable';
-    const REDIS_KEY_PREMIUM = 'proxy:premium';
+    static $redis_key = 'proxy:common';
 
     const ANONYMITY_TRANSPARENT = 'transparent';//透明
     const ANONYMITY_DISTORTING = 'distorting';//混淆
@@ -57,18 +54,18 @@ class Proxy extends Model
      */
     public static function getNewest($anonymity = null)
     {
-        $redis_key = self::getRedisKey();
-        if ($data = Redis::lpop($redis_key)) {
+        $class_name = get_called_class();
+        $class = new $class_name;
+        if ($data = Redis::lpop($class::$redis_key)) {
             $data = json_decode($data);
-            $proxy = StableProxy::find($data->id);
+            $proxy = $class->find($data->id);
         }
         if (!isset($proxy)) {
-            $query = self::query();
+            $query = $class->query();
             if ($anonymity) {
                 $query->whereAnonymity($anonymity);
             }
-            $time = Carbon::now()->subMinutes(5);//5分钟内检测过
-            $proxy = $query->where('last_checked_at', '>', $time)
+            $proxy = $query->orderByDesc('last_checked_at')
                 ->orderBy('used_times')
                 ->orderByDesc('checked_times')
                 ->first();
@@ -88,7 +85,8 @@ class Proxy extends Model
      */
     public static function getList($condition = [])
     {
-        $query = self::query();
+        $class_name = get_called_class();
+        $query = (new $class_name)->query();
         if (isset($condition['anonymity'])) {
             $query->whereAnonymity($condition['anonymity']);
         }
@@ -102,20 +100,6 @@ class Proxy extends Model
             $proxies = $query->paginate(20);
         }
         return $proxies;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getRedisKey()
-    {
-        if (get_called_class() == StableProxy::class) {
-            return self::REDIS_KEY_STABLE;
-        } elseif (get_called_class() == PremiumProxy::class) {
-            return self::REDIS_KEY_PREMIUM;
-        } else {
-            return self::REDIS_KEY_COMMON;
-        }
     }
 
     public function update(array $attributes = [], array $options = [])

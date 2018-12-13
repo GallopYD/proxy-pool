@@ -37,6 +37,7 @@ namespace App\Models;
 class PremiumProxy extends Proxy
 {
     protected $guarded = [];
+    static $redis_key = 'proxy:premium';
 
     public function update(array $attributes = [], array $options = [])
     {

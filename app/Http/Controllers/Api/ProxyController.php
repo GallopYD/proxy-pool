@@ -13,13 +13,24 @@ class ProxyController extends Controller
 {
 
     /**
-     * 获取代理列表
+     * 获取稳定代理列表
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function stableList()
     {
         $condition = request()->all();
         $proxies = StableProxy::getList($condition);
+        return ProxyResource::collection($proxies);
+    }
+
+    /**
+     * 获取优质代理列表
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function premiumList()
+    {
+        $condition = request()->all();
+        $proxies = PremiumProxy::getList($condition);
         return ProxyResource::collection($proxies);
     }
 

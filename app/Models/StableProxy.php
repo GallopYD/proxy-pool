@@ -39,6 +39,7 @@ use Carbon\Carbon;
 class StableProxy extends Proxy
 {
     protected $guarded = [];
+    static $redis_key = 'proxy:stable';
 
     public function update(array $attributes = [], array $options = [])
     {

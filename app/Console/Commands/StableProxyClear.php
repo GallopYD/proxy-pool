@@ -46,7 +46,7 @@ class StableProxyClear extends Command
             ->orderBy('last_checked_at')
             ->take(20)
             ->get();
-        $redis_key = StableProxy::getRedisKey();
+        $redis_key = StableProxy::$redis_key;
         $proxies->each(function ($proxy) use ($tester, $redis_key) {
             $proxy_ip = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             if ($speed = $tester->handle($proxy_ip)) {
