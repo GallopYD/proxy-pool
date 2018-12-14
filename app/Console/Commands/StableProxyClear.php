@@ -53,6 +53,7 @@ class StableProxyClear extends Command
                 $proxy->update([
                     'speed' => $speed,
                     'checked_times' => ++$proxy->checked_times,
+                    'fail_times' => 0,
                     'last_checked_at' => Carbon::now(),
                 ]);
                 if (Redis::llen($redis_key) > 1000) {

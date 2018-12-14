@@ -14,7 +14,7 @@ class AlertStableProxiesAddFailTimes extends Migration
     public function up()
     {
         Schema::table('stable_proxies', function (Blueprint $table) {
-            $table->integer('fail_times')->default(0)->comment('失败次数');
+            $table->integer('fail_times')->default(0)->comment('连续失败次数');
         });
     }
 

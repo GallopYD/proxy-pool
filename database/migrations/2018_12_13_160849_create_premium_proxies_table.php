@@ -22,7 +22,7 @@ class CreatePremiumProxiesTable extends Migration
             $table->integer('speed')->default(0)->comment('响应速度 毫秒');
             $table->integer('used_times')->default(0)->comment('使用次数');
             $table->integer('checked_times')->default(0)->comment('检测次数');
-            $table->integer('fail_times')->default(0)->comment('失败次数');
+            $table->integer('fail_times')->default(0)->comment('连续失败次数');
             $table->timestamp('last_checked_at')->nullable()->comment('最后检测时间');
             $table->timestamps();
             $table->unique(['ip', 'port', 'protocol']);
