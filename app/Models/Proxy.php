@@ -105,7 +105,7 @@ class Proxy extends Model
     public function update(array $attributes = [], array $options = [])
     {
         //检查超过30次归为稳定代理
-        if (!($this instanceof StableProxy || $this instanceof PremiumProxy) && $this->checked_times >= 30) {
+        if (get_called_class() == self::class && $this->checked_times >= 30) {
             $proxy = $this->toArray();
             unset($proxy['id']);
             $proxy['last_checked_at'] = Carbon::now();
