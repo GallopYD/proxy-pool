@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>代理池</title>
+    <title>{{ config('app.name', '代理池') }}</title>
     <meta name="keywords" content="代理池"/>
     <meta name="description " content="代理池"/>
 
@@ -43,13 +43,13 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    <li class="nav-item">
+                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'premium') active @endif">
                         <a class="nav-link" href="{{route('premium')}}">优质代理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'stable') active @endif">
                         <a class="nav-link" href="{{route('stable')}}">稳定代理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'common') active @endif">
                         <a class="nav-link" href="{{route('common')}}">普通代理</a>
                     </li>
                 </ul>

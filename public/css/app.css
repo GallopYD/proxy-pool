@@ -67,7 +67,7 @@ body {
     line-height: 1.6;
     color: #212529;
     text-align: left;
-    /*background-color: #f5f8fa*/
+    background-color: #f5f8fa
 }
 
 [tabindex="-1"]:focus {
@@ -9036,6 +9036,18 @@ a.text-dark:focus, a.text-dark:hover {
 
 .navbar-laravel {
     background-color: #fff;
-    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, .04);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .04)
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .15)
+}
+
+.active{
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-color: #1B1C1D;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.95);
+}
+.table-bg{
+    background-color: white;
 }

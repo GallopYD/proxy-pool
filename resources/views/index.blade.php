@@ -12,7 +12,7 @@
             {{--</div>--}}
             {{--</div>--}}
             {{--</div>--}}
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered table-bg">
                 <thead>
                 <tr>
                     <th>IP</th>
