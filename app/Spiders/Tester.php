@@ -2,13 +2,9 @@
 
 namespace App\Spiders;
 
-use App\Models\Proxy;
-use App\Models\StableProxy;
 use App\Utils\CommonUtil;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use \Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 
 class Tester
 {

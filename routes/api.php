@@ -18,12 +18,8 @@ Route::group([
     'middleware' => [],
     'limit' => 100,
 ], function () {
-    Route::get('proxies', 'ProxyController@stableList');//旧接口
-    Route::get('proxies/one', 'ProxyController@stable');//旧接口
-
-    Route::get('proxies/stable', 'ProxyController@stable');//获取稳定代理
-    Route::get('proxies/stable/list', 'ProxyController@stableList');//获取稳定代理列表
-    Route::get('proxies/premium', 'ProxyController@premium');//获取优质代理
-    Route::get('proxies/premium/list', 'ProxyController@premiumList');//获取优质代理列表
+    Route::get('proxies/one', 'ProxyController@one');//旧接口
+    Route::get('proxies/{quality}', 'ProxyController@one');//获取单个代理
+    Route::get('proxies/{quality}/list', 'ProxyController@index');//获取代理列表
     Route::get('proxies/check', 'ProxyController@check');
 });

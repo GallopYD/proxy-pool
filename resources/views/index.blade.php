@@ -35,7 +35,7 @@
                         <td>{{ strtoupper($proxy->protocol) }}</td>
                         <td>{{ \App\Utils\CommonUtil::formatSpeed($proxy->speed) }}</td>
                         <td>{{ $proxy->used_times }}</td>
-                        <td>{{ $proxy->checked_times }}</td>
+                        <td>{{ $proxy->succeed_times }}</td>
                         <td>{{ $proxy->last_checked_at }}</td>
                         <td>
                             <button class="btn btn-sm btn-outline-success btn-copy"

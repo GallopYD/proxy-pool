@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Redis;
  * @property string $protocol 协议
  * @property int $speed 响应速度 毫秒
  * @property int $used_times 使用次数
- * @property int $checked_times 检测次数
+ * @property int $succeed_times 检测次数
  * @property string|null $last_checked_at 最后检测时间
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -40,7 +40,12 @@ class Proxy extends Model
 {
 
     protected $guarded = [];
-    static $redis_key = 'proxy:common';
+
+    static $redis_prefix = 'proxy:';
+
+    const QUALITY_COMMON = 'common';//普通
+    const QUALITY_STABLE = 'stable';//稳定
+    const QUALITY_PREMIUM = 'premium';//优质
 
     const ANONYMITY_TRANSPARENT = 'transparent';//透明
     const ANONYMITY_DISTORTING = 'distorting';//混淆
@@ -49,25 +54,24 @@ class Proxy extends Model
 
     /**
      * 获取最新验证代理
+     * @param string $quality
      * @param null $anonymity
      * @return Model|null|object|static
      */
-    public static function getNewest($anonymity = null)
+    public static function getNewest($quality = 'common', $anonymity = null)
     {
-        $class_name = get_called_class();
-        $class = new $class_name;
-        if ($data = Redis::lpop($class::$redis_key)) {
+        if ($data = Redis::lpop(self::$redis_prefix . $quality)) {
             $data = json_decode($data);
-            $proxy = $class->find($data->id);
+            $proxy = Proxy::find($data->id);
         }
         if (!isset($proxy)) {
-            $query = $class->query();
+            $query = Proxy::query();
             if ($anonymity) {
                 $query->whereAnonymity($anonymity);
             }
-            $proxy = $query->orderByDesc('last_checked_at')
+            $proxy = $query->whereQuality($quality)
+                ->orderByDesc('last_checked_at')
                 ->orderBy('used_times')
-                ->orderByDesc('checked_times')
                 ->first();
         }
         if ($proxy) {
@@ -83,33 +87,35 @@ class Proxy extends Model
      * @param array $condition
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function getList($condition = [])
+    public static function getList($quality)
     {
-        $class_name = get_called_class();
-        $query = (new $class_name)->query();
-        if (isset($condition['anonymity'])) {
-            $query->whereAnonymity($condition['anonymity']);
-        }
-        $query->orderByDesc('last_checked_at')
-            ->orderByDesc('checked_times')
-            ->orderBy('used_times')
-            ->orderBy('speed');
-        if (isset($condition['per_page'])) {
-            $proxies = $query->paginate($condition['per_page']);
-        } else {
-            $proxies = $query->paginate(20);
-        }
+        $proxies = Proxy::whereQuality($quality)
+            ->orderByDesc('last_checked_at')
+            ->paginate(20);
         return $proxies;
     }
 
+    /**
+     * @param array $attributes
+     * @param array $options
+     * @return bool|void
+     * @throws \Exception
+     */
     public function update(array $attributes = [], array $options = [])
     {
-        //检查超过30次归为稳定代理
-        if (get_called_class() == self::class && $this->checked_times >= 30) {
-            $proxy = $this->toArray();
-            unset($proxy['id']);
-            $proxy['last_checked_at'] = Carbon::now();
-            StableProxy::insert($proxy);
+        //检测超过30次为稳定代理，100次为优质代理
+        //检测失败次数自动剔除：普通代理1次，稳定代理3次，优质代理5次
+        if ($this->quality == self::QUALITY_COMMON && $this->succeed_times >= 30) {
+            $this->quality = self::QUALITY_STABLE;
+            $this->save();
+        } elseif ($this->quality == self::QUALITY_STABLE && $this->succeed_times >= 100) {
+            $this->quality = self::QUALITY_PREMIUM;
+            $this->save();
+        } elseif ($this->quality == self::QUALITY_COMMON && $this->fail_times >= 1) {
+            $this->delete();
+        } elseif ($this->quality == self::QUALITY_STABLE && $this->fail_times >= 3) {
+            $this->delete();
+        } elseif ($this->quality == self::QUALITY_PREMIUM && $this->fail_times >= 5) {
             $this->delete();
         } else {
             parent::update($attributes, $options);

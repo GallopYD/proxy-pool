@@ -15,7 +15,5 @@ Route::group([
     'middleware' => [],
     'limit' => 100,
 ], function () {
-    Route::get('/', 'IndexController@premium')->name('premium');
-    Route::get('/stable', 'IndexController@stable')->name('stable');
-    Route::get('/common', 'IndexController@common')->name('common');
+    Route::get('/{quality?}', 'IndexController@index')->name('index');
 });

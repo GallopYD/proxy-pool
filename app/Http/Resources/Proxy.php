@@ -23,7 +23,7 @@ class Proxy extends JsonResource
             'protocol' => $this->protocol,
             'speed' => $this->speed,
             'used_times' => $this->used_times,
-            'checked_times' => $this->checked_times,
+            'succeed_times' => $this->succeed_times,
             'last_checked_at' => $this->last_checked_at ? Carbon::parse($this->last_checked_at)->format('Y-m-d H:i:s') : '',
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),

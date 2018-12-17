@@ -14,7 +14,7 @@ class ProxyClear extends Command
      *
      * @var string
      */
-    protected $signature = 'proxy:clear {remainder}';
+    protected $signature = 'proxy:clear {quality} {remainder?}';
 
     /**
      * The console command description.
@@ -40,25 +40,30 @@ class ProxyClear extends Command
      */
     public function handle()
     {
-        //余数
         $remainder = $this->argument('remainder');
+        $quality = $this->argument('quality');
+
         $tester = Tester::getInstance();
-        $proxies = Proxy::query()
-            ->whereRaw("id % 5 = {$remainder}")
-            ->orderBy('last_checked_at')
+        $query = Proxy::whereQuality($quality);
+        //普通代理分5个任务检测
+        if ($quality == Proxy::QUALITY_COMMON) {
+            $query->whereRaw("id % 5 = {$remainder}");
+        }
+        $proxies = $query->orderBy('last_checked_at')
             ->take(60)
             ->get();
+
         $proxies->each(function ($proxy) use ($tester) {
             $proxy_ip = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             if ($speed = $tester->handle($proxy_ip)) {
-                $proxy->update([
-                    'speed' => $speed,
-                    'checked_times' => ++$proxy->checked_times,
-                    'last_checked_at' => Carbon::now(),
-                ]);
+                $proxy->speed = $speed;
+                $proxy->succeed_times = ++$proxy->succeed_times;
+                $proxy->last_checked_at = Carbon::now();
             } else {
-                $proxy->delete();
+                $proxy->fail_times = ++$proxy->fail_times;
+                $proxy->last_checked_at = Carbon::now();
             }
+            $proxy->update();
         });
     }
 }
