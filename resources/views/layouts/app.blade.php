@@ -43,14 +43,14 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'premium') active @endif">
-                        <a class="nav-link" href="{{route('premium')}}">优质代理</a>
+                    <li class="nav-item @if(!\Illuminate\Support\Facades\Request::route()->quality || \Illuminate\Support\Facades\Request::route()->quality == 'premium') active @endif">
+                        <a class="nav-link" href="{{route('index',['quality'=>'premium'])}}">优质代理</a>
                     </li>
-                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'stable') active @endif">
-                        <a class="nav-link" href="{{route('stable')}}">稳定代理</a>
+                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->quality == 'stable') active @endif">
+                        <a class="nav-link" href="{{route('index',['quality'=>'stable'])}}">稳定代理</a>
                     </li>
-                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->getName() == 'common') active @endif">
-                        <a class="nav-link" href="{{route('common')}}">普通代理</a>
+                    <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->quality == 'common') active @endif">
+                        <a class="nav-link" href="{{route('index',['quality'=>'common'])}}">普通代理</a>
                     </li>
                 </ul>
             </div>

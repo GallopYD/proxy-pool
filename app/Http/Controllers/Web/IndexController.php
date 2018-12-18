@@ -13,7 +13,7 @@ class IndexController extends Controller
      * @param string $quality
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($quality = Proxy::QUALITY_COMMON)
+    public function index($quality = Proxy::QUALITY_PREMIUM)
     {
         $proxies = Proxy::getList($quality);
         return view('index', compact('proxies'));

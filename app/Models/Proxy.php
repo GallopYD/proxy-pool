@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Redis;
  * @property int $id
  * @property string $ip IP地址
  * @property string $port 端口
- * @property string $anonymity 匿名度 transparent透明 anonymous匿名 distorting混淆 high_anonymous高匿
  * @property string $protocol 协议
+ * @property string $quality 质量 common普通 stable稳定 premium优质
+ * @property string $anonymity 匿名度 transparent透明 anonymous匿名 distorting混淆 high_anonymous高匿
  * @property int $speed 响应速度 毫秒
  * @property int $used_times 使用次数
- * @property int $succeed_times 检测次数
+ * @property int $succeed_times 检测成功次数
+ * @property int $fail_times 连续失败次数
  * @property string|null $last_checked_at 最后检测时间
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -24,14 +26,16 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereAnonymity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereCheckedTimes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereFailTimes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereLastCheckedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy wherePort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereProtocol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereQuality($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereSpeed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereSucceedTimes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proxy whereUsedTimes($value)
  * @mixin \Eloquent
