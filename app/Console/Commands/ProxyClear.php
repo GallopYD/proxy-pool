@@ -48,10 +48,14 @@ class ProxyClear extends Command
         $query = Proxy::whereQuality($quality);
         //普通代理分5个任务检测
         if ($quality == Proxy::QUALITY_COMMON) {
-            $query->whereRaw("id % 5 = {$remainder}");
+            $query->whereRaw("id % 5 = {$remainder}")
+                ->take(60);
+        } elseif ($quality == Proxy::QUALITY_STABLE) {
+            $query->take(60);
+        } else {
+            $query->take(20);
         }
         $proxies = $query->orderBy('last_checked_at')
-            ->take(60)
             ->get();
 
         $proxies->each(function ($proxy) use ($tester) {
