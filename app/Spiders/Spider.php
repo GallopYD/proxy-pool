@@ -212,7 +212,7 @@ class Spider
     private function checkLimit()
     {
         if (!static::$current_count) {
-            static::$current_count = Proxy::count();
+            static::$current_count = Proxy::whereQuality(Proxy::QUALITY_COMMON)->count();
         }
         if (static::$current_count > config('proxy.limit_count')) {
             Log::info('代理池IP数量达到上限');
