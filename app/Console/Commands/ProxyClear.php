@@ -50,11 +50,9 @@ class ProxyClear extends Command
         if ($quality == Proxy::QUALITY_COMMON) {
             $query->whereRaw("id % 5 = {$remainder}")
                 ->take(50);
-        } elseif ($quality == Proxy::QUALITY_STABLE) {
+        } else{
             $query->whereRaw("id % 2 = {$remainder}")
                 ->take(50);
-        } else {
-            $query->take(20);
         }
         $proxies = $query->orderBy('last_checked_at')
             ->get();

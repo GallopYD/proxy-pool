@@ -46,7 +46,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('proxy:clear stable 1')->cron('*/2 * * * *');
 
         //优质代理清洗
-        $schedule->command('proxy:clear premium')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear premium 0')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear premium 1')->cron('*/2 * * * *');
     }
 
     /**

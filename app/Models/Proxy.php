@@ -117,9 +117,7 @@ class Proxy extends Model
             $this->save();
         } elseif ($this->quality == self::QUALITY_COMMON && $this->fail_times >= 1) {
             $this->delete();
-        } elseif ($this->quality == self::QUALITY_STABLE && $this->fail_times >= 3) {
-            $this->delete();
-        } elseif ($this->quality == self::QUALITY_PREMIUM && $this->fail_times >= 5) {
+        } elseif (in_array($this->quality, [self::QUALITY_STABLE, self::QUALITY_PREMIUM]) == self::QUALITY_STABLE && $this->fail_times >= 3) {
             $this->delete();
         } else {
             parent::update($attributes, $options);
