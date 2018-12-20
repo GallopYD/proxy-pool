@@ -33,6 +33,7 @@ php artisan migrate
 
 ### 使用
 * 代理品质
+
 | 质量 | 检测次数 | 连续失败次数 | 描述|
 | ----| ---- | ---- | ----|
 | common | checked_times < 30 | fail_times < 1 | 普通代理，检测成功次数小于30|
@@ -40,11 +41,13 @@ php artisan migrate
 | premium | checked_times >= 100 | fail_times <= 3 | 优质代理，检测成功次数大于100|
 
 * WEB
+
 | web | method | Description | arg|
 | ----| ---- | ---- | ----|
 | /{quality} | GET | 代理列表| quality=common/stable/premium|
 
 * API
+
 | api | method | Description | arg|
 | ----| ---- | ---- | ----|
 | /api/proxies/{quality} | GET | 获取单个代理 | quality=common/stable/premium|
