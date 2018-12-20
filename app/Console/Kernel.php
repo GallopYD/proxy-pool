@@ -40,14 +40,21 @@ class Kernel extends ConsoleKernel
         $schedule->command('proxy:clear common 2')->cron('*/2 * * * *');
         $schedule->command('proxy:clear common 3')->cron('*/2 * * * *');
         $schedule->command('proxy:clear common 4')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 5')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 6')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 7')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 8')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 9')->cron('*/2 * * * *');
 
         //稳定代理清洗
         $schedule->command('proxy:clear stable 0')->cron('*/2 * * * *');
         $schedule->command('proxy:clear stable 1')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear stable 2')->cron('*/2 * * * *');
 
         //优质代理清洗
         $schedule->command('proxy:clear premium 0')->cron('*/2 * * * *');
         $schedule->command('proxy:clear premium 1')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear premium 2')->cron('*/2 * * * *');
     }
 
     /**
