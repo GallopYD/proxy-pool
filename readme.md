@@ -32,19 +32,21 @@ php artisan migrate
 
 
 ### 使用
-* 代理品质
+* 代理质量
 
 | 质量 | 检测次数 | 连续失败次数 | 描述|
 | ----| ---- | ---- | ----|
 | common | checked_times < 30 | fail_times < 1 | 普通代理，检测成功次数小于30|
-| stable | 30<=checked_times < 100 | fail_times <= 3 | 稳定代理，检测成功次数大于30小于100|
+| stable | 30 <= checked_times < 100 | fail_times <= 3 | 稳定代理，检测成功次数大于30小于100|
 | premium | checked_times >= 100 | fail_times <= 3 | 优质代理，检测成功次数大于100|
+
 
 * WEB
 
 | web | method | Description | arg|
 | ----| ---- | ---- | ----|
 | /{quality} | GET | 代理列表| quality=common/stable/premium|
+
 
 * API
 
