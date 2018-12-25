@@ -45,16 +45,30 @@ class Kernel extends ConsoleKernel
         $schedule->command('proxy:clear common 7')->cron('*/2 * * * *');
         $schedule->command('proxy:clear common 8')->cron('*/2 * * * *');
         $schedule->command('proxy:clear common 9')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 10')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 11')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 12')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 13')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 14')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 15')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 16')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 17')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 18')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear common 19')->cron('*/2 * * * *');
 
         //稳定代理清洗
         $schedule->command('proxy:clear stable 0')->cron('*/2 * * * *');
         $schedule->command('proxy:clear stable 1')->cron('*/2 * * * *');
         $schedule->command('proxy:clear stable 2')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear stable 3')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear stable 4')->cron('*/2 * * * *');
 
         //优质代理清洗
         $schedule->command('proxy:clear premium 0')->cron('*/2 * * * *');
         $schedule->command('proxy:clear premium 1')->cron('*/2 * * * *');
         $schedule->command('proxy:clear premium 2')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear premium 3')->cron('*/2 * * * *');
+        $schedule->command('proxy:clear premium 4')->cron('*/2 * * * *');
     }
 
     /**
