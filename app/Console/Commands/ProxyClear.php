@@ -48,11 +48,12 @@ class ProxyClear extends Command
         $query = Proxy::whereQuality($quality);
         //普通代理分5个任务检测
         if ($quality == Proxy::QUALITY_COMMON) {
-            $query->whereRaw("id % 20 = {$remainder}")
-                ->take(50);
-        } else{
             $query->whereRaw("id % 5 = {$remainder}")
-                ->take(50);
+                ->take(60);
+        } elseif ($quality == Proxy::QUALITY_STABLE) {
+            $query->take(60);
+        } else {
+            $query->take(60);
         }
         $proxies = $query->orderBy('last_checked_at')
             ->get();
@@ -63,7 +64,7 @@ class ProxyClear extends Command
                 $proxy->speed = $speed;
                 $proxy->succeed_times = ++$proxy->succeed_times;
                 $proxy->last_checked_at = Carbon::now();
-                Redis::lpush(Proxy::$redis_prefix . $proxy->quality, json_encode($proxy));
+                Redis::lpush(Proxy::REDIS_PREFIX . $proxy->quality, json_encode($proxy));
             } else {
                 $proxy->fail_times = ++$proxy->fail_times;
                 $proxy->last_checked_at = Carbon::now();
