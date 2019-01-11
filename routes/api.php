@@ -18,7 +18,6 @@ Route::group([
     'middleware' => [],
     'limit' => 100,
 ], function () {
-    Route::get('proxies/one', 'ProxyController@one');//旧接口
     Route::get('proxies/{quality}', 'ProxyController@one');//获取单个代理
     Route::get('proxies/{quality}/list', 'ProxyController@index');//获取代理列表
     Route::get('proxies/check', 'ProxyController@check');

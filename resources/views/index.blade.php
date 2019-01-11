@@ -20,7 +20,6 @@
                     <th>匿名度</th>
                     <th>类型</th>
                     <th>响应速度</th>
-                    <th>使用次数</th>
                     <th>验证次数</th>
                     <th>最后验证时间</th>
                     <th>操作</th>
@@ -34,7 +33,6 @@
                         <td>{{ __('proxy.'.$proxy->anonymity) }}</td>
                         <td>{{ strtoupper($proxy->protocol) }}</td>
                         <td>{{ \App\Utils\CommonUtil::formatSpeed($proxy->speed) }}</td>
-                        <td>{{ $proxy->used_times }}</td>
                         <td>{{ $proxy->succeed_times }}</td>
                         <td>{{ $proxy->last_checked_at }}</td>
                         <td>

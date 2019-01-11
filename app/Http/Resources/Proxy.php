@@ -16,18 +16,12 @@ class Proxy extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'ip' => $this->ip,
             'port' => $this->port,
             'protocol' => $this->protocol,
             'quality' => $this->quality,
             'anonymity' => $this->anonymity,
             'speed' => $this->speed,
-            'used_times' => $this->used_times,
-            'succeed_times' => $this->succeed_times,
-            'last_checked_at' => $this->last_checked_at ? Carbon::parse($this->last_checked_at)->format('Y-m-d H:i:s') : '',
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }
