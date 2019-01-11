@@ -29,15 +29,20 @@ git clone https://github.com/GallopYD/proxy-pool.git
 composer install
 php artisan migrate
 ```
-
+* 配置crontab定时任务
+```
+crontab -e
+* * * * * php /www/proxy-pool/artisan schedule:run >> /dev/null 2>&1 
+（/www/proxy-pool为项目路径）
+```
 
 ### 使用
 * 代理质量
 
 | 质量 | 检测次数 | 连续失败次数 | 描述|
 | ----| ---- | ---- | ----|
-| common | checked_times < 30 | fail_times < 1 | 普通代理，检测成功次数小于30|
-| stable | 30 <= checked_times < 100 | fail_times <= 3 | 稳定代理，检测成功次数大于30小于100|
+| common | checked_times < 20 | fail_times < 1 | 普通代理，检测成功次数小于20|
+| stable | 20 <= checked_times < 50 | fail_times <= 3 | 稳定代理，检测成功次数大于20小于50|
 | premium | checked_times >= 100 | fail_times <= 3 | 优质代理，检测成功次数大于100|
 
 
