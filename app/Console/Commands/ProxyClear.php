@@ -6,7 +6,6 @@ use App\Models\Proxy;
 use App\Spiders\Tester;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
 
 class ProxyClear extends Command
 {
@@ -64,7 +63,6 @@ class ProxyClear extends Command
                 $proxy->speed = $speed;
                 $proxy->succeed_times = ++$proxy->succeed_times;
                 $proxy->last_checked_at = Carbon::now();
-                Redis::lpush(Proxy::REDIS_PREFIX . $proxy->quality, json_encode($proxy));
             } else {
                 $proxy->fail_times = ++$proxy->fail_times;
                 $proxy->last_checked_at = Carbon::now();
