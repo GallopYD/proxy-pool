@@ -37,7 +37,7 @@
                 </tbody>
             </table>
             <!-- /.box-body -->
-            {{ $proxies->withPath('/')->render() }}
+            {{ $proxies->withPath('')->render() }}
         </div>
     </div>
 @endsection
