@@ -24,6 +24,7 @@ class CreateProxiesTable extends Migration
             $table->integer('succeed_times')->default(0)->comment('检测成功次数');
             $table->integer('fail_times')->default(0)->comment('连续失败次数');
             $table->timestamp('last_checked_at')->nullable()->comment('最后检测时间');
+            $table->timestamp('last_used_at')->nullable()->comment('最后获取时间');
             $table->timestamps();
             $table->unique(['ip', 'port', 'protocol']);
         });

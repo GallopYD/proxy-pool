@@ -106,10 +106,6 @@ class Spider
                     'connect_timeout' => $this->connect_timeout,
                     'timeout' => $this->timeout
                 ];
-                //使用代理IP抓取
-                if ($this->use_proxy && $proxy = Proxy::getNewest(Proxy::QUALITY_STABLE)) {
-                    $options['proxy'] = $proxy->protocol . "://" . $proxy->ip . ":" . $proxy->port;
-                }
                 //抓取网页内容
                 $content = $this->ql->get($url, [], $options);
                 //编码设置

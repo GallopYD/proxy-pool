@@ -13,24 +13,23 @@ class ProxyController extends Controller
 
     /**
      * 获取代理列表
-     * @param string $quality
+     * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index($quality = Proxy::QUALITY_COMMON)
+    public function index(Request $request)
     {
-        $proxies = Proxy::getList($quality);
+        $proxies = Proxy::getList($request);
         return ProxyResource::collection($proxies);
     }
 
     /**
      * 获取单个代理
-     * @param string $quality
+     * @param Request $request
      * @return ProxyResource|\Illuminate\Http\JsonResponse
      */
-    public function one($quality = Proxy::QUALITY_COMMON)
+    public function one(Request $request)
     {
-        $anonymity = request('anonymity', null);
-        $proxy = Proxy::getNewest($quality, $anonymity);
+        $proxy = Proxy::getNewest($request);
         if (!$proxy) {
             return response()->json([]);
         }

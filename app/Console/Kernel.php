@@ -27,24 +27,24 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //代理爬取
-        $schedule->command('proxy:crawl Data5u')->everyThirtyMinutes();
-        $schedule->command('proxy:crawl Ip3366')->everyThirtyMinutes();
-        $schedule->command('proxy:crawl Kuaidaili')->everyThirtyMinutes();
-        $schedule->command('proxy:crawl Xicidaili')->everyThirtyMinutes();
-        $schedule->command('proxy:crawl Fatezero')->hourly();
+        //免费代理爬取
+        $schedule->command('proxy:crawl Data5u')->everyTenMinutes();
+        $schedule->command('proxy:crawl Ip3366')->everyTenMinutes();
+        $schedule->command('proxy:crawl Kuaidaili')->everyTenMinutes();
+        $schedule->command('proxy:crawl Xicidaili')->everyTenMinutes();
+        $schedule->command('proxy:crawl Fatezero')->everyThirtyMinutes();
 
-        //代理清洗
+        //普通代理检测
         $schedule->command('proxy:clear common 0')->cron('*/3 * * * *');
         $schedule->command('proxy:clear common 1')->cron('*/3 * * * *');
         $schedule->command('proxy:clear common 2')->cron('*/3 * * * *');
         $schedule->command('proxy:clear common 3')->cron('*/3 * * * *');
         $schedule->command('proxy:clear common 4')->cron('*/3 * * * *');
 
-        //稳定代理清洗
+        //稳定代理检测
         $schedule->command('proxy:clear stable')->cron('*/3 * * * *');
 
-        //优质代理清洗
+        //优质代理检测
         $schedule->command('proxy:clear premium')->cron('*/3 * * * *');
     }
 
