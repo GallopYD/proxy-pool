@@ -26,7 +26,7 @@
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
+            <a class="navbar-brand" href="{{ route('index',[],false) }}">
                 代理池
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -44,13 +44,13 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
                     <li class="nav-item @if(!\Illuminate\Support\Facades\Request::route()->quality || \Illuminate\Support\Facades\Request::route()->quality == 'premium') active @endif">
-                        <a class="nav-link" href="{{route('index',['quality'=>'premium'])}}">优质代理</a>
+                        <a class="nav-link" href="{{route('index',['quality'=>'premium'],false)}}">优质代理</a>
                     </li>
                     <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->quality == 'stable') active @endif">
-                        <a class="nav-link" href="{{route('index',['quality'=>'stable'])}}">稳定代理</a>
+                        <a class="nav-link" href="{{route('index',['quality'=>'stable'],false)}}">稳定代理</a>
                     </li>
                     <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->quality == 'common') active @endif">
-                        <a class="nav-link" href="{{route('index',['quality'=>'common'])}}">普通代理</a>
+                        <a class="nav-link" href="{{route('index',['quality'=>'common'],false)}}">普通代理</a>
                     </li>
                 </ul>
             </div>
