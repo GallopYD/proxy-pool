@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', '代理池'),
 
     /*
     |--------------------------------------------------------------------------
@@ -225,5 +225,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'keywords' => env('APP_KEYWORDS', '代理池'),
+    'description' => env('APP_DESCRIPTION', '代理池'),
 
 ];

@@ -8,9 +8,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', '代理池') }}</title>
-    <meta name="keywords" content="代理池"/>
-    <meta name="description " content="代理池"/>
+    <title>{{ config('app.name') }}</title>
+    <meta name="keywords" content="{{config('app.keywords')}}"/>
+    <meta name="description" content="{{config('app.description')}}"/>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -27,7 +27,7 @@
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
         <div class="container">
             <a class="navbar-brand" href="{{ route('index',[],false) }}">
-                代理池
+                {{config('app.name')}}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -51,6 +51,9 @@
                     </li>
                     <li class="nav-item @if(\Illuminate\Support\Facades\Request::route()->quality == 'common') active @endif">
                         <a class="nav-link" href="{{route('index',['quality'=>'common'],false)}}">普通代理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="https://github.com/GallopYD/proxy-pool">GitHub<img class="github-logo" src="{{asset('images/github.jpg')}}"></a>
                     </li>
                 </ul>
             </div>
