@@ -15,6 +15,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
@@ -53,7 +55,8 @@
                         <a class="nav-link" href="{{route('index',['quality'=>'common'],false)}}">普通代理</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" target="_blank" href="https://github.com/GallopYD/proxy-pool">GitHub<img class="github-logo" src="{{asset('images/github.jpg')}}"></a>
+                        <a class="nav-link" target="_blank" href="https://github.com/GallopYD/proxy-pool">GitHub<img
+                                    class="github-logo" src="{{asset('images/github.jpg')}}"></a>
                     </li>
                 </ul>
             </div>
