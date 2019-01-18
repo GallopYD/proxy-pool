@@ -2,8 +2,7 @@
 
 namespace App\Utils;
 
-use App\Models\Proxy;
-use App\Spiders\Tester;
+use Carbon\Carbon;
 
 class CommonUtil
 {
@@ -24,10 +23,28 @@ class CommonUtil
      */
     public static function formatSpeed($speed)
     {
-        if ($speed <= 500) {
-            return $speed . '毫秒';
+        $speed = printf("%.2f", ($speed / 1000)) . '秒';
+        return $speed;
+    }
+
+    /**
+     * 存活时间计算
+     * @param $created_at
+     * @return string
+     */
+    public static function survivalTime($created_at)
+    {
+        $now = Carbon::now();
+        if ($days = $now->diffInDays($created_at)) {
+            $time = $days . '天';
+        } elseif ($hours = $now->diffInHours($created_at)) {
+            $time = $hours . '小时';
+        } elseif ($minutes = $now->diffInMinutes($created_at)) {
+            $time = $minutes . '分钟';
+        } else {
+            $time = $created_at;
         }
-        return printf("%.2f", ($speed / 1000)) . '秒';
+        return $time;
     }
 
 }

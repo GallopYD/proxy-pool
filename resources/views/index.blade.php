@@ -11,7 +11,7 @@
                     <th>匿名度</th>
                     <th>类型</th>
                     <th>响应速度</th>
-                    <th>验证次数</th>
+                    <th>存活时间</th>
                     <th>最后验证时间</th>
                     <th>操作</th>
                 </tr>
@@ -24,7 +24,7 @@
                         <td>{{ __('proxy.'.$proxy->anonymity) }}</td>
                         <td>{{ strtoupper($proxy->protocol) }}</td>
                         <td>{{ \App\Utils\CommonUtil::formatSpeed($proxy->speed) }}</td>
-                        <td>{{ $proxy->succeed_times }}</td>
+                        <td>{{ \App\Utils\CommonUtil::survivalTime($proxy->created_at) }}</td>
                         <td>{{ $proxy->last_checked_at }}</td>
                         <td>
                             <button class="btn btn-sm btn-outline-success btn-copy"
