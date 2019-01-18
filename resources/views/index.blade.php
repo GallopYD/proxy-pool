@@ -43,9 +43,9 @@
 @endsection
 
 @section('js')
-    <script src="{{asset('js/jquery.min.js',false)}}"></script>
-    <script src="{{asset('js/bootstrap.min.js',false)}}"></script>
-    <script src="{{asset('js/clipboard.min.js',false)}}"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/clipboard.min.js')}}"></script>
     <script>
         $(function () {
             var loadModal = false;
