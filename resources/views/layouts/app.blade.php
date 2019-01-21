@@ -69,10 +69,8 @@
         @yield('content')
 
         <div class="text-center">
-            {{--<p>--}}
-            {{--友情链接：<a href="http://tool.357.im/">域名工具</a>--}}
-            {{--</p>--}}
             <span style="color: red">声明：本网站所有代理IP均采集于网络，请勿用于非法途径，违者后果自负！</span><br>
+            友情链接：<a href="https://tool.357.im/">域名工具</a><br>
             <script type="text/javascript"
                     src="https://s23.cnzz.com/z_stat.php?id=1275295247&web_id=1275295247"></script>
         </div>
