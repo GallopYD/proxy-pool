@@ -55,6 +55,9 @@
                         <a class="nav-link" href="{{route('index',['quality'=>'common'],false)}}">普通代理</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="/api/doc">API</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" target="_blank" href="https://github.com/GallopYD/proxy-pool">GitHub<img
                                     class="github-logo" src="{{asset('images/github.jpg')}}"></a>
                     </li>

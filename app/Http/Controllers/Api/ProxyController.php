@@ -12,18 +12,15 @@ class ProxyController extends Controller
 {
 
     /**
-     * 获取代理列表
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function index(Request $request)
-    {
-        $proxies = Proxy::getList($request);
-        return ProxyResource::collection($proxies);
-    }
-
-    /**
-     * 获取单个代理
+     * 获取单条代理
+     * @SWG\Get(
+     *     path="/api/proxies/{quality}",
+     *     tags={"Proxy"},
+     *     @SWG\Parameter(name="quality",required=true,in="path",type="string",default="premium",enum={"common", "stable", "premium"},description="质量"),
+     *     @SWG\Parameter(name="protocol",required=false,in="query",type="string",enum={"http", "https"},description="协议"),
+     *     @SWG\Parameter(name="anonymity",required=false,in="query",type="string",enum={"transparent", "anonymous","high_anonymous"},description="隐匿度"),
+     *     @SWG\Response(response="200", description="")
+     * )
      * @param Request $request
      * @return ProxyResource|\Illuminate\Http\JsonResponse
      */
@@ -34,6 +31,25 @@ class ProxyController extends Controller
             return response()->json([]);
         }
         return new ProxyResource($proxy);
+    }
+
+    /**
+     * 获取代理列表
+     * @SWG\Get(
+     *     path="/api/proxies/{quality}/list",
+     *     tags={"Proxy"},
+     *     @SWG\Parameter(name="quality",required=true,in="path",type="string",default="premium",enum={"common", "stable", "premium"},description="质量"),
+     *     @SWG\Parameter(name="protocol",required=false,in="query",type="string",enum={"http", "https"},description="协议"),
+     *     @SWG\Parameter(name="anonymity",required=false,in="query",type="string",enum={"transparent", "anonymous","high_anonymous"},description="隐匿度"),
+     *     @SWG\Response(response="200", description="")
+     * )
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index(Request $request)
+    {
+        $proxies = Proxy::getList($request);
+        return ProxyResource::collection($proxies);
     }
 
     /**
