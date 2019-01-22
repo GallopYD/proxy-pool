@@ -33,10 +33,10 @@
 
 * crontab定时任务
 
-> $ crontab -e
+> $ vim /etc/crontab
 
 ```
-* * * * * www php /www/proxy-pool/artisan schedule:run >> /dev/null 2>&1
+* * * * * root php /www/proxy-pool/artisan schedule:run >> /dev/null 2>&1
 ```
 
 ## 使用
