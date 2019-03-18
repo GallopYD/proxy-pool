@@ -71,6 +71,7 @@ class Proxy extends Model
         $time_interval = Carbon::now()->subMinutes(10);
         $proxy = $query->whereQuality($quality)
             ->where('last_checked_at', '>', $time_interval)
+            ->whereFailTimes(0)
             ->orderBy('last_used_at')
             ->first();
         if ($proxy) {

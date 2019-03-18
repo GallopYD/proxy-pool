@@ -46,6 +46,9 @@ class Kernel extends ConsoleKernel
 
         //优质代理检测
         $schedule->command('proxy:clear premium')->cron('*/3 * * * *');
+
+        //失败代理清洗
+        $schedule->command('proxy:clear-fail')->cron('0 */12 * * *');
     }
 
     /**

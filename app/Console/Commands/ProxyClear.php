@@ -54,13 +54,15 @@ class ProxyClear extends Command
         } else {
             $query->take(60);
         }
-        $proxies = $query->orderBy('last_checked_at')
+        $proxies = $query->whereFailTimes(0)
+            ->orderBy('last_checked_at')
             ->get();
 
         $proxies->each(function ($proxy) use ($tester) {
             $proxy_ip = $proxy->protocol . '://' . $proxy->ip . ':' . $proxy->port;
             if ($speed = $tester->handle($proxy_ip)) {
                 $proxy->speed = $speed;
+                $proxy->fail_times = 0;//连续失败次数重置
                 $proxy->succeed_times = ++$proxy->succeed_times;
                 $proxy->last_checked_at = Carbon::now();
             } else {
