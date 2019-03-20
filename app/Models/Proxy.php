@@ -112,7 +112,7 @@ class Proxy extends Model
     public function update(array $attributes = [], array $options = [])
     {
         //检测成功超过20次为稳定代理，50次为优质代理
-        //检测失败次数自动剔除：普通代理1次，稳定代理5次，优质代理10次
+        //检测失败次数自动剔除：普通代理1次，稳定代理3次，优质代理5次
         if ($this->quality == self::QUALITY_COMMON && $this->succeed_times >= 20) {
             $this->quality = self::QUALITY_STABLE;
             $this->save();
@@ -121,9 +121,9 @@ class Proxy extends Model
             $this->save();
         } elseif ($this->quality == self::QUALITY_COMMON && $this->fail_times >= 1) {
             $this->delete();
-        } elseif ($this->quality == self::QUALITY_STABLE && $this->fail_times >= 5) {
+        } elseif ($this->quality == self::QUALITY_STABLE && $this->fail_times >= 3) {
             $this->delete();
-        } elseif ($this->quality == self::QUALITY_PREMIUM && $this->fail_times >= 10) {
+        } elseif ($this->quality == self::QUALITY_PREMIUM && $this->fail_times >= 5) {
             $this->delete();
         } else {
             parent::update($attributes, $options);
